@@ -1,0 +1,86 @@
+[
+  {
+    "id": 1,
+    "nombre": "Constructora Q",
+    "cuit": "30-12345903-9",
+    "rubro": "Constructora",
+    "emailContacto": "q_contrusctora@mail.com.ar",
+    "telefono": "123456",
+    "direccion": "calle 123",
+    "personaContacto": "Juan",
+    "fechaAlta": "2026-04-18T00:36:01.917Z",
+    "activo": false
+  },
+  {
+    "id": 2,
+    "nombre": "Panificadora Buen Pan",
+    "cuit": "30-12345333-9",
+    "rubro": "Manufactura",
+    "emailContacto": "rrhh@buenpan.com",
+    "telefono": "11-4567-8300",
+    "direccion": "Av. Falsa 123",
+    "personaContacto": "Mario Rojo",
+    "fechaAlta": "2026-04-19T23:48:19.385Z",
+    "activo": false
+  },
+  {
+    "id": 3,
+    "nombre": "anita srl",
+    "cuit": "27-21111111-1",
+    "rubro": "Comestible",
+    "emailContacto": "anita@gmail.com",
+    "telefono": "12331212",
+    "direccion": "quien sabe 123",
+    "personaContacto": "anita",
+    "fechaAlta": "2026-04-24T23:24:28.223Z",
+    "activo": false
+  },
+  {
+    "id": 4,
+    "nombre": "Innevo",
+    "cuit": "12-12345678-9",
+    "rubro": "Software",
+    "emailContacto": "innevo@gmail.com",
+    "telefono": "12345",
+    "direccion": "Casa 123",
+    "personaContacto": "Montontito Flores",
+    "fechaAlta": "2026-04-25T15:14:02.968Z",
+    "activo": false
+  },
+  {
+    "id": 5,
+    "nombre": "TecnoStar",
+    "cuit": "30-12345678-9",
+    "rubro": "Tecnologia",
+    "emailContacto": "q_contrusctora@mail.com.ar",
+    "telefono": "123456",
+    "direccion": "Av. Corrientes 1234, CABA",
+    "personaContacto": "Thomas",
+    "fechaAlta": "2026-05-17T21:07:55.378Z",
+    "activo": true
+  },
+  {
+    "id": 6,
+    "nombre": "ArthurDodger",
+    "cuit": "20-18582020-8",
+    "rubro": "Salud",
+    "emailContacto": "rrhhsalud@gmail.com",
+    "telefono": "124578912",
+    "direccion": "Siempre Viva 1402 Sidney",
+    "personaContacto": "Jack Dodge",
+    "fechaAlta": "2026-05-17T21:11:16.191Z",
+    "activo": true
+  },
+  {
+    "id": 1779461771810,
+    "nombre": "ana",
+    "cuit": "11-11111111-1",
+    "rubro": "Tecnologia",
+    "emailContacto": "11@cc.com",
+    "telefono": "11",
+    "direccion": "11",
+    "personaContacto": "11",
+    "fechaAlta": "2026-05-22T14:56:11.810Z",
+    "activo": true
+  }
+]

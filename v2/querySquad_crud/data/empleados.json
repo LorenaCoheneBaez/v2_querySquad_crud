@@ -1,0 +1,38 @@
+[
+  {
+    "id": 2,
+    "nombre": "Mari",
+    "apellido": "Gómez",
+    "dni": "40987654",
+    "empresaId": 2,
+    "salario": 15000,
+    "activo": true
+  },
+  {
+    "id": 3,
+    "nombre": "Thomas",
+    "apellido": "Rial",
+    "dni": "25893645",
+    "empresaId": 1,
+    "salario": 15000,
+    "activo": true
+  },
+  {
+    "id": 5,
+    "nombre": "cris",
+    "apellido": "galvez",
+    "dni": "1221212",
+    "empresaId": 1,
+    "salario": 1222,
+    "activo": true
+  },
+  {
+    "id": 6,
+    "nombre": "Ana",
+    "apellido": "Galvez",
+    "dni": "1312311",
+    "empresaId": 1,
+    "salario": 13000,
+    "activo": true
+  }
+]

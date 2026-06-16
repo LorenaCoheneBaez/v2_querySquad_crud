@@ -1,0 +1,38 @@
+// Modal confirmación eliminación de novedad
+.modal.fade#confirmarEliminarNovedadModal(tabindex="-1", aria-labelledby="confirmarEliminarNovedadLabel", aria-hidden="true")
+  .modal-dialog
+    .modal-content
+      .modal-header
+        h5.modal-title#confirmarEliminarNovedadLabel Confirmar eliminación
+        button.btn-close(type="button", data-bs-dismiss="modal", aria-label="Cerrar")
+      .modal-body
+        p.mb-2
+          | ¿Estás seguro de que deseas eliminar la novedad de tipo 
+          strong#tipoNovedadModal
+          |  perteneciente al empleado 
+          strong#nombreEmpleadoModal
+          | ?
+      .modal-footer
+        button.btn.btn-secondary(type="button", data-bs-dismiss="modal") Cancelar
+        form#formEliminarNovedad(method="POST", action="")
+          input(type="hidden", name="_method", value="DELETE")
+          button.btn.btn-danger(type="submit") Confirmar eliminación
+
+script.
+  document.addEventListener('DOMContentLoaded', function () {
+    const modalEliminarNovedad = document.getElementById('confirmarEliminarNovedadModal');
+    if (!modalEliminarNovedad) return;
+
+    modalEliminarNovedad.addEventListener('show.bs.modal', function (event) {
+      const button = event.relatedTarget;
+      const novedadId = button.getAttribute('data-novedad-id');
+      const novedadTipo = button.getAttribute('data-novedad-tipo');
+      const empleadoNombre = button.getAttribute('data-empleado-nombre');
+
+      document.getElementById('tipoNovedadModal').textContent = novedadTipo || '';
+      document.getElementById('nombreEmpleadoModal').textContent = empleadoNombre || '';
+
+      document.getElementById('formEliminarNovedad')
+        .setAttribute('action', `/novedades/${novedadId}`);
+    });
+  });
