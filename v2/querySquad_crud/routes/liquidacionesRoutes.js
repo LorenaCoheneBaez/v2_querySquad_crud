@@ -8,7 +8,7 @@ const {
     listarLiquidaciones,
     crearLiquidacion,
     mostrarFormularioNuevaLiquidacion,
-    //mostrarFormularioEditarLiquidacion,
+    mostrarFormularioEditarLiquidacion,
     actualizarLiquidacion,
     eliminarLiquidacion
 } = require("../controllers/liquidacionController");
@@ -23,7 +23,7 @@ router.get("/nueva", mostrarFormularioNuevaLiquidacion)
 router.post("/", crearLiquidacion);
 
 // Formulario editar
-//router.get("/actualizar/:id", mostrarFormularioEditarLiquidacion);
+router.get("/actualizar/:id", mostrarFormularioEditarLiquidacion);
 
 // Actualizar
 router.put("/:id", actualizarLiquidacion);

@@ -93,7 +93,7 @@ const crearLiquidacion = async (req, res) => {
 const listarLiquidaciones = async (req, res) => {
     try {
         const { periodo, dni, empresa } = req.query;
-        let filtroLiquidacion = { activo: true };
+        let filtroLiquidacion = {};
 
         // Limpiamos los inputs de espacios en blanco
         const periodoStr = periodo ? periodo.trim() : null;
@@ -171,24 +171,58 @@ const listarLiquidaciones = async (req, res) => {
     }
 };
 
+// GET: Mostrar formulario para editar
+const mostrarFormularioEditarLiquidacion = async (req, res) => {
+    try {
+        const liquidacion = await LiquidacionModel.findById(req.params.id)
+            .populate("empleadoId")
+            .populate("empresaId")
+            .lean();
+
+        if (!liquidacion) {
+            return res.status(404).send("Liquidación no encontrada");
+        }
+
+        res.render("editar-liquidacion", {
+            liquidacion,
+            activePage: "liquidaciones"
+        });
+    } catch (error) {
+        console.error("Error al cargar edición:", error);
+        res.status(500).send("Error interno");
+    }
+};
+
 const actualizarLiquidacion = async (req, res) => {
+    try {
+        const liquidacion = await LiquidacionModel.findById(req.params.id);
 
-    const liquidacion =
-        await LiquidacionModel.findById(req.params.id);
+        if (!liquidacion) {
+            return res.status(404).send("Liquidación no encontrada");
+        }
 
-    liquidacion.montoLiquidado =
-        req.body.montoLiquidado;
+        liquidacion.montoLiquidado = Number(req.body.montoLiquidado);
+        liquidacion.observaciones = req.body.observaciones;
 
-    await liquidacion.save();
+        if (req.body.activo !== undefined) {
+            liquidacion.activo = (req.body.activo === "true");
+        }
 
-    await registrarAccion(
-        "Liquidacion",
-        "Modificación",
-        `Se modificó la liquidación del período ${liquidacion.periodo}.`
-    );
+        await liquidacion.save();
 
-    res.redirect("/liquidaciones");
+        const estadoTexto = liquidacion.activo ? "Activa" : "Desactivada";
+        await registrarAccion(
+            "Liquidacion",
+            "Modificación",
+            `Se modificó la liquidación del período ${liquidacion.periodo}. Nuevo estado: ${estadoTexto}.`
+        );
 
+        res.redirect("/liquidaciones?msg=updated");
+
+    } catch (error) {
+        console.error("Error al actualizar la liquidación:", error);
+        res.status(500).send("Error interno al guardar los cambios");
+    }
 };
 
 //Baja lógica
@@ -217,4 +251,5 @@ module.exports = {
     actualizarLiquidacion,
     eliminarLiquidacion,
     mostrarFormularioNuevaLiquidacion,
+    mostrarFormularioEditarLiquidacion
 };

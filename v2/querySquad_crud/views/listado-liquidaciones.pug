@@ -32,6 +32,7 @@ html(lang="es")
 
     .container.mt-4
 
+      //- ALERTAS
       if query && query.msg
         .alert.alert-success.alert-dismissible.fade.show(role="alert")
           if query.msg === 'created'
@@ -39,15 +40,14 @@ html(lang="es")
           else if query.msg === 'updated'
             | Liquidación actualizada correctamente
           else if query.msg === 'deleted'
-            | Liquidación eliminada correctamente
-
+            | Liquidación dada de baja correctamente
           button.btn-close(type="button", data-bs-dismiss="alert")
 
       h2 Lista de Liquidaciones
       hr
 
-      .d-flex.justify-content-between.align-items-center.mb-3
-        a.btn.btn-finance(href="/liquidaciones/nueva")
+      .d-flex.justify-content-between.align-items-start.mb-3
+        a.btn.btn-finance.mt-1(href="/liquidaciones/nueva")
           | Nueva Liquidación
 
         form(method="GET", action="/liquidaciones" style="width: 100%; max-width: 700px;")
@@ -91,6 +91,7 @@ html(lang="es")
             th Período
             th Salario Base
             th Monto Liquidado
+            th Estado
             th Acciones
 
         tbody
@@ -103,9 +104,14 @@ html(lang="es")
               td $#{liquidacion.salarioBase.toFixed(2)}
               td $#{liquidacion.montoLiquidado.toFixed(2)}
 
+              td.align-middle
+                if liquidacion.activo
+                  span.badge.bg-success Activa
+                else
+                  span.badge.bg-secondary Desactivada
+
               td(style="white-space: nowrap;")
                 .d-flex.gap-2
-
                   button.btn.btn-info.btn-sm.text-white(
                     type="button",
                     title="Ver detalle / recibo",
@@ -120,21 +126,16 @@ html(lang="es")
                   )
                     i.bi.bi-pencil
 
-                  form(
-                    method="POST",
-                    action=`/liquidaciones/${liquidacion._id}`
+                  button.btn.btn-danger.btn-sm(
+                    type="button",
+                    title="Dar de baja",
+                    data-bs-toggle="modal",
+                    data-bs-target="#modalEliminarLiquidacion",
+                    data-id=liquidacion._id,
+                    data-empleado=`${liquidacion.empleadoId.apellido}, ${liquidacion.empleadoId.nombre}`,
+                    data-periodo=liquidacion.periodo
                   )
-                    input(
-                      type="hidden",
-                      name="_method",
-                      value="DELETE"
-                    )
-
-                    button.btn.btn-danger.btn-sm(
-                      type="submit",
-                      title="Eliminar liquidación"
-                    )
-                      i.bi.bi-trash
+                    i.bi.bi-trash
 
       if liquidaciones.length === 0
         if query && (query.periodo || query.dni || query.empresa)
@@ -146,7 +147,7 @@ html(lang="es")
         else
           p.text-muted.mt-4 No hay liquidaciones registradas en el sistema.
 
-    //Modal detalle de liquidación
+    //modal detalle
     each liquidacion in liquidaciones
       .modal.fade(id=`modalRecibo-${liquidacion._id}` tabindex="-1" aria-hidden="true")
         .modal-dialog.modal-lg.modal-dialog-centered
@@ -178,6 +179,7 @@ html(lang="es")
                     strong Período: 
                     span.fs-5 #{liquidacion.periodo}
 
+              // Detalles
               table.table.table-bordered.mt-4
                 thead.table-light
                   tr
@@ -232,7 +234,42 @@ html(lang="es")
                 i.bi.bi-printer 
                 |  Imprimir / PDF
 
+    //Modal eliminar
+    .modal.fade#modalEliminarLiquidacion(tabindex="-1" aria-hidden="true")
+      .modal-dialog.modal-dialog-centered
+        .modal-content
+          .modal-header.bg-danger.text-white
+            h5.modal-title Confirmar Baja
+            button.btn-close.btn-close-white(type="button" data-bs-dismiss="modal")
+          .modal-body
+            p ¿Está seguro que desea dar de baja la liquidación del período <strong id="modalPeriodoTexto"></strong> para el empleado <strong id="modalEmpleadoTexto"></strong>?
+            p.text-muted.small Esta acción es una baja lógica; el registro permanecerá en el sistema como inactivo.
+          .modal-footer
+            button.btn.btn-secondary(type="button" data-bs-dismiss="modal") Cancelar
+            form#formEliminarLiquidacion(method="POST" action="")
+              input(type="hidden" name="_method" value="DELETE")
+              button.btn.btn-danger(type="submit") Sí, dar de baja
+
     footer.text-center.mt-4.mb-3
       small © Query Squad 2026
 
     script(src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js")
+    
+    //Modal eliminacion
+    script.
+      const modalEliminar = document.getElementById('modalEliminarLiquidacion');
+      if (modalEliminar) {
+        modalEliminar.addEventListener('show.bs.modal', function (event) {
+          const button = event.relatedTarget;
+          
+          const id = button.getAttribute('data-id');
+          const empleado = button.getAttribute('data-empleado');
+          const periodo = button.getAttribute('data-periodo');
+          
+          document.getElementById('modalEmpleadoTexto').textContent = empleado;
+          document.getElementById('modalPeriodoTexto').textContent = periodo;
+          
+          const form = document.getElementById('formEliminarLiquidacion');
+          form.action = `/liquidaciones/${id}`;
+        });
+      }
