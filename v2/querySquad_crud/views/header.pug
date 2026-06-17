@@ -46,5 +46,17 @@ nav.navbar.navbar-expand-lg.navbar-dark.bg-finance
       )
         | Auditoría
 
+      a.nav-link(
+        class=(activePage === 'liquidaciones' ? 'active' : ''),
+        href="/liquidaciones"
+      )
+        | Liquidaciones
+
+      a.nav-link(
+        class=(activePage === 'socios' ? 'active' : ''),
+        href="/socios"
+      )
+        | Socios
+
       a.logout-btn(href="/logout")
         | Cerrar sesión
