@@ -112,7 +112,6 @@ const listarLiquidaciones = async (req, res) => {
             }).select("_id");
 
             if (empleadosEncontrados.length === 0) {
-                // Si no existe el empleado, forzamos un resultado vacío
                 filtroLiquidacion._id = "000000000000000000000000";
             } else {
                 const idsEmpleados = empleadosEncontrados.map(emp => emp._id);
@@ -127,7 +126,6 @@ const listarLiquidaciones = async (req, res) => {
             }).select("_id");
 
             if (empresasEncontradas.length === 0) {
-                // Si no existe la empresa, forzamos un resultado vacío
                 filtroLiquidacion._id = "000000000000000000000000";
             } else {
                 const idsEmpresas = empresasEncontradas.map(emp => emp._id);

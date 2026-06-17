@@ -127,10 +127,9 @@ const mostrarFormularioEditarNovedad = async (req, res, next) => {
 };
 
 // PUT: Actualizar novedad
-// PUT: Actualizar novedad
 const actualizarNovedad = async (req, res, next) => {
     try {
-        // Agregamos valorImpacto aquí
+        // Agregamos valorImpacto para liquidacion
         const { tipo, descripcion, fecha, estado, valorImpacto } = req.body;
         const novedad = await NovedadModel.findById(req.params.id);
 
