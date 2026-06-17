@@ -10,7 +10,8 @@
       "EMPLEADOS",
       "LIQUIDACIONES",
       "SOCIOS",
-      "AUDITORIA"
+      "AUDITORIA", 
+      "NOVEDADES"
     ],
     "activo": true
   },
