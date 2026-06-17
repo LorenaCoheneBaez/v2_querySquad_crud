@@ -1,0 +1,81 @@
+doctype html
+html(lang="es")
+  head
+    meta(charset="UTF-8")
+    meta(name="viewport", content="width=device-width, initial-scale=1")
+    title Editar Socio
+
+    link(rel="stylesheet", href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css")
+    link(rel="stylesheet", href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css")
+
+    style.
+      .bg-finance { background-color: #1e3a5f; }
+      .btn-finance { background-color: #1e3a5f; color: white; border: none; }
+      .btn-finance:hover { background-color: #16324a; color: white; }
+
+  body
+    include header
+
+    .container.mt-4
+      h2 Editar Socio
+      hr
+
+      a.btn.btn-outline-secondary.mb-3(href="/socios") ← Volver al listado
+
+      .card.shadow-sm.border-0.mt-2
+        .card-body.p-4
+          form(method="POST", action=`/socios/${socio._id}`)
+            input(type="hidden", name="_method", value="PUT")
+
+            .row.mb-3
+              .col-md-6.mb-3
+                label.form-label(for="nombre") Nombre
+                input.form-control(type="text", name="nombre", id="nombre", value=socio.nombre, required)
+              
+              .col-md-6.mb-3
+                label.form-label(for="apellido") Apellido
+                input.form-control(type="text", name="apellido", id="apellido", value=socio.apellido, required)
+
+            .row.mb-3
+              .col-md-4.mb-3
+                label.form-label(for="dni") DNI
+                input.form-control(type="text", name="dni", id="dni", value=socio.dni, required)
+              
+              .col-md-4.mb-3
+                label.form-label(for="email") Email
+                input.form-control(type="email", name="email", id="email", value=socio.email, required)
+              
+              .col-md-4.mb-3
+                label.form-label(for="participacion") Participación (%)
+                input.form-control(type="number", name="participacion", id="participacion", step="0.01", min="0", max="100", value=socio.participacion, required)
+
+            hr.mb-4
+            h5.mb-3 Configuración del Sistema
+
+            .row.mb-3
+              .col-md-6.mb-3
+                label.form-label Módulos Habilitados
+                - var p = socio.permisos || []
+                select.form-select(name="permisos", id="permisos", multiple, size="6")
+                  option(value="EMPRESAS", selected=p.includes("EMPRESAS")) EMPRESAS
+                  option(value="EMPLEADOS", selected=p.includes("EMPLEADOS")) EMPLEADOS
+                  option(value="NOVEDADES", selected=p.includes("NOVEDADES")) NOVEDADES
+                  option(value="LIQUIDACIONES", selected=p.includes("LIQUIDACIONES")) LIQUIDACIONES
+                  option(value="SOCIOS", selected=p.includes("SOCIOS")) SOCIOS
+                  option(value="AUDITORIA", selected=p.includes("AUDITORIA")) AUDITORIA
+                .form-text Mantenga presionado <strong>Ctrl / Cmd</strong> para seleccionar múltiples.
+              
+              .col-md-6.mb-3
+                label.form-label(for="activo") Estado del Socio
+                select.form-select(name="activo", id="activo", required)
+                  option(value="true", selected=socio.activo===true) Activo
+                  option(value="false", selected=socio.activo===false) Inactivo (Baja)
+
+            button.btn.btn-finance.w-100.py-2.mt-3(type="submit")
+              i.bi.bi-save.me-2
+              | Guardar Cambios
+
+    footer.text-center.mt-5.mb-3
+      small © Query Squad 2026
+
+    script(src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js")

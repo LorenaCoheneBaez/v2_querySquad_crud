@@ -5,78 +5,127 @@ const mostrarFormularioNuevoSocio = (req, res) => {
     res.render("nuevo-socio");
 };
 
-
 const crearSocio = async (req, res) => {
+    try {
+        const socio = new SocioModel(req.body);
+        await socio.save();
 
-    const socio = new SocioModel(req.body);
+        if (req.body.permisos) {
+            req.body.permisos = Array.isArray(req.body.permisos) ? req.body.permisos : [req.body.permisos];
+        } else {
+            req.body.permisos = [];
+        }
 
-    await socio.save();
+        await registrarAccion(
+            "Socio",
+            "Alta",
+            `Se registró al socio ${socio.nombre} ${socio.apellido}.`
+        );
 
-    await registrarAccion(
-        "Socio",
-        "Alta",
-        `Se registró al socio ${socio.nombre} ${socio.apellido}.`
-    );
-
-    res.redirect("/socios");
-
+        res.redirect("/socios?msg=created");
+    } catch (error) {
+        console.error("Error al crear socio:", error);
+        res.status(500).send("Error interno al crear el socio");
+    }
 };
 
 const listarSocios = async (req, res) => {
-//Los datos coinciden con lo especificado en ing de software
-    const socios =
-        await SocioModel.find().lean();
+    try {
+        const { dni } = req.query;
+        let filtro = {};
+        //Los datos coinciden con los dados en ing de software
+        // Filtro por DNI
+        if (dni) {
+            filtro.dni = { $regex: dni.trim(), $options: "i" };
+        }
 
-    res.render("listado-socios", {
-        socios
-    });
+        const socios = await SocioModel.find(filtro).lean();
 
+        res.render("listado-socios", {
+            socios,
+            query: req.query
+        });
+    } catch (error) {
+        console.error("Error al listar socios:", error);
+        res.status(500).send("Error interno");
+    }
+};
+
+const mostrarFormularioEditarSocio = async (req, res) => {
+    try {
+        const socio = await SocioModel.findById(req.params.id).lean();
+        if (!socio) {
+            return res.status(404).send("Socio no encontrado");
+        }
+        res.render("editar-socio", { socio });
+    } catch (error) {
+        console.error("Error al cargar edición:", error);
+        res.status(500).send("Error interno");
+    }
 };
 
 const actualizarSocio = async (req, res) => {
+    try {
+        const socio = await SocioModel.findById(req.params.id);
+        if (!socio) {
+            return res.status(404).send("Socio no encontrado");
+        }
 
-    const socio =
-        await SocioModel.findById(req.params.id);
+        if (req.body.activo !== undefined) {
+            req.body.activo = req.body.activo === "true";
+        }
 
-    Object.assign(socio, req.body);
+        if (req.body.permisos) {
+            req.body.permisos = Array.isArray(req.body.permisos) ? req.body.permisos : [req.body.permisos];
+        } else {
+            req.body.permisos = [];
+        }
 
-    await socio.save();
+        Object.assign(socio, req.body);
+        await socio.save();
 
-    await registrarAccion(
-        "Socio",
-        "Modificación",
-        `Se modificó el socio ${socio.nombre} ${socio.apellido}.`
-    );
+        await registrarAccion(
+            "Socio",
+            "Modificación",
+            `Se modificó el socio ${socio.nombre} ${socio.apellido}. Nuevo estado: ${socio.activo ? 'Activo' : 'Inactivo'}.`
+        );
 
-    res.redirect("/socios");
-
+        res.redirect("/socios?msg=updated");
+    } catch (error) {
+        console.error("Error al actualizar socio:", error);
+        res.status(500).send("Error interno al actualizar");
+    }
 };
 
-//Baja lógica
+// Baja lógica
 const eliminarSocio = async (req, res) => {
+    try {
+        const socio = await SocioModel.findById(req.params.id);
+        if (!socio) {
+            return res.status(404).send("Socio no encontrado");
+        }
 
-    const socio =
-        await SocioModel.findById(req.params.id);
+        socio.activo = false;
+        await socio.save();
 
-    socio.activo = false;
+        await registrarAccion(
+            "Socio",
+            "Baja",
+            `Se realizó la baja lógica del socio ${socio.nombre} ${socio.apellido}.`
+        );
 
-    await socio.save();
-
-    await registrarAccion(
-        "Socio",
-        "Baja",
-        `Se realizó la baja lógica del socio ${socio.nombre} ${socio.apellido}.`
-    );
-
-    res.redirect("/socios");
-
+        res.redirect("/socios?msg=deleted");
+    } catch (error) {
+        console.error("Error al dar de baja socio:", error);
+        res.status(500).send("Error interno al eliminar");
+    }
 };
 
 module.exports = {
     crearSocio,
     listarSocios,
     mostrarFormularioNuevoSocio,
-    //mostrarFormularioEditarSocio,
+    mostrarFormularioEditarSocio,
     actualizarSocio,
     eliminarSocio
 };

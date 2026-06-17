@@ -8,7 +8,7 @@ const {
     listarSocios,
     crearSocio,
     mostrarFormularioNuevoSocio,
-    //mostrarFormularioEditarSocio,
+    mostrarFormularioEditarSocio,
     actualizarSocio,
     eliminarSocio
 } = require("../controllers/sociosController");
@@ -23,7 +23,7 @@ router.get("/nuevo", mostrarFormularioNuevoSocio);
 router.post("/", crearSocio);
 
 // Formulario editar
-//router.get("/actualizar/:id", //mostrarFormularioEditarSocio);
+router.get("/actualizar/:id", mostrarFormularioEditarSocio);
 
 // Actualizar
 router.put("/:id", actualizarSocio);
