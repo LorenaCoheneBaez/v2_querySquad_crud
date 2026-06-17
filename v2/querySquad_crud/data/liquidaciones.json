@@ -2,17 +2,25 @@
   {
     "empleadoId": 2,
     "periodo": "2026-06",
-    "montoLiquidado": 15000,
+    "montoLiquidado": 14700,
     "novedadesAplicadas": [],
-    "observaciones": "Liquidación Mari Gómez - Sin novedades",
+    "observaciones": "Liquidación Mari Gómez - Aplicado CCT FAUPPA",
     "activo": true
   },
   {
     "empleadoId": 3,
     "periodo": "2026-06",
-    "montoLiquidado": 16500,
+    "montoLiquidado": 17625,
     "novedadesAplicadas": [],
-    "observaciones": "Liquidación Thomas Rial - Con bono",
+    "observaciones": "Liquidación Thomas Rial - Aplicado CCT UOCRA",
+    "activo": true
+  },
+  {
+    "empleadoId": 6,
+    "periodo": "2026-06",
+    "montoLiquidado": 13975,
+    "novedadesAplicadas": [],
+    "observaciones": "Liquidación Ana Galvez - Aplicado CCT Sanidad",
     "activo": true
   }
 ]

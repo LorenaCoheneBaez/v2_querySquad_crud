@@ -50,37 +50,17 @@ html(lang="es")
         a.btn.btn-finance(href="/liquidaciones/nueva")
           | Nueva Liquidación
 
-        form(method="GET", action="/liquidaciones" style="width: 100%; max-width: 700px;")
-          .row.g-2.align-items-center
-            .col-md-3
-              input.form-control(
-                type="text",
-                name="periodo",
-                placeholder="Período (ej: 2026-06)",
-                value=query && query.periodo ? query.periodo : ''
-              )
-            .col-md-3
-              input.form-control(
-                type="text",
-                name="dni",
-                placeholder="DNI Empleado",
-                value=query && query.dni ? query.dni : ''
-              )
-            .col-md-4
-              input.form-control(
-                type="text",
-                name="empresa",
-                placeholder="Nombre Empresa",
-                value=query && query.empresa ? query.empresa : ''
-              )
-            .col-md-2
-              button.btn.btn-outline-secondary.w-100(type="submit")
-                i.bi.bi-search
-                |  Buscar
-              
-              if query && (query.periodo || query.dni || query.empresa)
-                a.btn.btn-link.btn-sm.w-100.p-0.mt-1.text-danger(href="/liquidaciones" style="text-decoration: none;") 
-                  | Limpiar filtros
+        form(method="GET", action="/liquidaciones")
+          .input-group.mb-3(style="max-width: 400px;")
+            input.form-control(
+              type="text",
+              name="periodo",
+              placeholder="Buscar por período (2026-06)...",
+              value=query && query.periodo ? query.periodo : ''
+            )
+            button.btn.btn-outline-secondary(type="submit")
+              i.bi.bi-search
+              |  Buscar
 
       table.table.table-bordered.table-hover
         thead.table-light
@@ -107,9 +87,9 @@ html(lang="es")
                 .d-flex.gap-2
 
                   button.btn.btn-info.btn-sm.text-white(
-                    type="button",
-                    title="Ver detalle / recibo",
-                    data-bs-toggle="modal",
+                    type="button"
+                    title="Ver detalle / recibo"
+                    data-bs-toggle="modal"
                     data-bs-target=`#modalRecibo-${liquidacion._id}`
                   )
                     i.bi.bi-file-earmark-text
@@ -124,29 +104,13 @@ html(lang="es")
                     method="POST",
                     action=`/liquidaciones/${liquidacion._id}`
                   )
-                    input(
-                      type="hidden",
-                      name="_method",
-                      value="DELETE"
-                    )
-
-                    button.btn.btn-danger.btn-sm(
-                      type="submit",
-                      title="Eliminar liquidación"
-                    )
+                    input(type="hidden", name="_method", value="DELETE")
+                    button.btn.btn-danger.btn-sm(type="submit", title="Eliminar liquidación")
                       i.bi.bi-trash
 
       if liquidaciones.length === 0
-        if query && (query.periodo || query.dni || query.empresa)
-          .alert.alert-warning.mt-4.d-flex.align-items-center
-            i.bi.bi-search.fs-3.me-3
-            div
-              h5.alert-heading.mb-1 Sin resultados
-              p.mb-0 No se encontraron liquidaciones que coincidan con los filtros ingresados.
-        else
-          p.text-muted.mt-4 No hay liquidaciones registradas en el sistema.
+        p.text-muted No hay liquidaciones registradas.
 
-    //Modal detalle de liquidación
     each liquidacion in liquidaciones
       .modal.fade(id=`modalRecibo-${liquidacion._id}` tabindex="-1" aria-hidden="true")
         .modal-dialog.modal-lg.modal-dialog-centered
@@ -191,12 +155,12 @@ html(lang="es")
                     td.text-end
                   
                   if liquidacion.empresaId.convenioAplicable && liquidacion.empresaId.convenioAplicable.nombre
-                    if liquidacion.desglose && liquidacion.desglose.premioPresentismo > 0
+                    if liquidacion.desglose.premioPresentismo > 0
                       tr
                         td Adicional Presentismo (#{liquidacion.empresaId.convenioAplicable.adicionalPresentismo}%)
                         td.text-end $ #{liquidacion.desglose.premioPresentismo.toFixed(2)}
                         td.text-end
-                    if liquidacion.desglose && liquidacion.desglose.deduccionSindical > 0
+                    if liquidacion.desglose.deduccionSindical > 0
                       tr
                         td Aporte Sindical - #{liquidacion.empresaId.convenioAplicable.nombre} (#{liquidacion.empresaId.convenioAplicable.aporteSindical}%)
                         td.text-end
