@@ -7,7 +7,7 @@ router.use(methodOverride("_method"));
 const {
     listarLiquidaciones,
     crearLiquidacion,
-    //mostrarFormularioNuevaLiquidacion,
+    mostrarFormularioNuevaLiquidacion,
     //mostrarFormularioEditarLiquidacion,
     actualizarLiquidacion,
     eliminarLiquidacion
@@ -17,7 +17,7 @@ const {
 router.get("/", listarLiquidaciones);
 
 // Formulario nueva liquidación
-//router.get("/nueva", mostrarFormularioNuevaLiquidacion);
+router.get("/nueva", mostrarFormularioNuevaLiquidacion)
 
 // Crear
 router.post("/", crearLiquidacion);

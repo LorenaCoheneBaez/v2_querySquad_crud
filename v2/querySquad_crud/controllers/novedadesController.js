@@ -74,7 +74,8 @@ const listarNovedades = async (req, res, next) => {
 // POST: Crear novedad 
 const crearNovedad = async (req, res, next) => {
     try {
-        const { empleadoId, tipo, descripcion, fecha, estado } = req.body;
+        // Agregamos valorImpacto para liquidar
+        const { empleadoId, tipo, descripcion, fecha, estado, valorImpacto } = req.body;
 
         const empleadoExiste = await EmpleadoModel.findById(empleadoId);
         if (!empleadoExiste) {
@@ -88,7 +89,8 @@ const crearNovedad = async (req, res, next) => {
             tipo,
             descripcion,
             fecha,
-            estado: estado || "pendiente"
+            estado: estado || "pendiente",
+            valorImpacto: Number(valorImpacto) || 0
         });
 
         await nuevaNovedad.save();
@@ -125,11 +127,13 @@ const mostrarFormularioEditarNovedad = async (req, res, next) => {
 };
 
 // PUT: Actualizar novedad
+// PUT: Actualizar novedad
 const actualizarNovedad = async (req, res, next) => {
     try {
-        const { tipo, descripcion, fecha, estado } = req.body;
+        // Agregamos valorImpacto aquí
+        const { tipo, descripcion, fecha, estado, valorImpacto } = req.body;
         const novedad = await NovedadModel.findById(req.params.id);
-        
+
         if (!novedad) {
             return res.status(404).send("Novedad no encontrada");
         }
@@ -138,10 +142,11 @@ const actualizarNovedad = async (req, res, next) => {
         novedad.descripcion = descripcion;
         novedad.fecha = fecha;
         novedad.estado = estado;
+        novedad.valorImpacto = Number(valorImpacto) || 0;
 
         await novedad.save();
         await registrarAccion('Novedad', 'Modificación', `Se actualizó la novedad ID ${novedad._id.toString().slice(-5).toUpperCase()}`);
-        
+
         if (isApiRequest(req)) {
             return res.status(200).json({
                 mensaje: "Novedad modificada exitosamente",

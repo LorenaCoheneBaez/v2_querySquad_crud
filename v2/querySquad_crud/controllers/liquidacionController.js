@@ -4,6 +4,24 @@ const NovedadModel = require("../models/NovedadSchema");
 const EmpresaModel = require("../models/EmpresaSchema");
 const { registrarAccion } = require("./auditoriaController");
 
+// GET: Mostrar el formulario para una nueva liquidación
+const mostrarFormularioNuevaLiquidacion = async (req, res) => {
+    try {
+        const empleados = await EmpleadoModel.find({
+            activo: true,
+            salario: { $gt: 0 }
+        }).sort({ apellido: 1 }).lean();
+
+        res.render("nueva-liquidacion", {
+            empleados,
+            activePage: "liquidaciones"
+        });
+    } catch (error) {
+        console.error("Error al cargar el formulario de liquidación:", error);
+        res.status(500).send("Error interno al cargar el formulario");
+    }
+};
+
 const crearLiquidacion = async (req, res) => {
     try {
         const { empleadoId, periodo } = req.body;
@@ -198,4 +216,5 @@ module.exports = {
     listarLiquidaciones,
     actualizarLiquidacion,
     eliminarLiquidacion,
+    mostrarFormularioNuevaLiquidacion,
 };
