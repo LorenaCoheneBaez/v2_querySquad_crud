@@ -1,0 +1,18 @@
+[
+  {
+    "empleadoId": 2,
+    "periodo": "2026-06",
+    "montoLiquidado": 15000,
+    "novedadesAplicadas": [],
+    "observaciones": "Liquidación Mari Gómez - Sin novedades",
+    "activo": true
+  },
+  {
+    "empleadoId": 3,
+    "periodo": "2026-06",
+    "montoLiquidado": 16500,
+    "novedadesAplicadas": [],
+    "observaciones": "Liquidación Thomas Rial - Con bono",
+    "activo": true
+  }
+]

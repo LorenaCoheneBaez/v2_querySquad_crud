@@ -1,0 +1,35 @@
+[
+  {
+    "nombre": "Juan",
+    "apellido": "Perez",
+    "dni": "20111222",
+    "email": "juan.perez@talentoevolutivo.com",
+    "participacion": 40,
+    "permisos": [
+      "EMPRESAS",
+      "EMPLEADOS",
+      "LIQUIDACIONES",
+      "SOCIOS",
+      "AUDITORIA"
+    ],
+    "activo": true
+  },
+  {
+    "nombre": "Luis",
+    "apellido": "Montán",
+    "dni": "25333444",
+    "email": "luis.montan@talentoevolutivo.com",
+    "participacion": 35,
+    "permisos": ["EMPLEADOS", "NOVEDADES", "LIQUIDACIONES"],
+    "activo": true
+  },
+  {
+    "nombre": "Rio",
+    "apellido": "Mario",
+    "dni": "30555666",
+    "email": "mario.rio@talentoevolutivo.com",
+    "participacion": 25,
+    "permisos": ["EMPRESAS", "AUDITORIA"],
+    "activo": true
+  }
+]
