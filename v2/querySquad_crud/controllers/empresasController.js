@@ -3,11 +3,26 @@ const NovedadModel = require("../models/NovedadSchema");
 const EmpleadoModel = require("../models/EmpleadoSchema");
 const { registrarAccion } = require("./auditoriaController");
 
+//convenios para liqudiacion
+const procesarConvenio = (body) => {
+    if (body.cctNombre && body.cctNombre.trim() !== '') {
+        return {
+            nombre: body.cctNombre.trim(),
+            aporteSindical: Number(body.cctAporte) || 0,
+            adicionalPresentismo: Number(body.cctAdicional) || 0
+        };
+    }
+    return null;
+};
+
 const crearEmpresa = async (req, res, next) => {
     
     console.log("Datos que llegaron al body:", req.body);
 
     try {
+        //Convenios para liquidacion
+        req.body.convenioAplicable = procesarConvenio(req.body);
+
         const nuevaEmpresa = new EmpresaModel(req.body);
         await nuevaEmpresa.save(); 
 
@@ -139,6 +154,9 @@ const actualizarEmpresa = async (req, res) => {
             });
         }
 
+        //Convenios para liquidacion
+        req.body.convenioAplicable = procesarConvenio(req.body);
+
         Object.assign(empresa, req.body);
 
         await empresa.save();
@@ -192,7 +210,7 @@ const eliminarEmpresa = async (req, res) => {
             });
         }
 
-        // si llega aca, no hay empelados activos para la misma ent dejo "borrar" de manera logica
+        // si llega aca, no hay empleados activos para la misma ent dejo "borrar" de manera logica
         empresa.activo = false;
         //auditoria
         await registrarAccion('Empresa', 'Baja', `Se realizó la baja lógica de la empresa "${empresa.nombre}".`);

@@ -9,18 +9,9 @@ html(lang="es")
     link(rel="stylesheet", href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css")
 
     style.
-      .bg-finance {
-        background-color: #1e3a5f;
-      }
-      .btn-finance {
-        background-color: #1e3a5f;
-        color: white;
-        border: none;
-      }
-      .btn-finance:hover {
-        background-color: #16324a;
-        color: white;
-      }
+      .bg-finance { background-color: #1e3a5f; }
+      .btn-finance { background-color: #1e3a5f; color: white; border: none; }
+      .btn-finance:hover { background-color: #16324a; color: white; }
 
   body
     include header
@@ -95,9 +86,8 @@ html(lang="es")
             th No
             th Cuit
             th Nombre
-            th Dirección
-            th Teléfono
             th Rubro
+            th Detalle de Convenio
             th Estado
             th Acciones
 
@@ -107,19 +97,33 @@ html(lang="es")
               td #{index + 1}
               td #{empresa.cuit}
               td #{empresa.nombre}
-              td #{empresa.direccion}
-              td #{empresa.telefono}
               td #{empresa.rubro}
-
+              
+              //Convenios para liquidacion
               td
+                if empresa.convenioAplicable && empresa.convenioAplicable.nombre
+                  .border.rounded.p-2.bg-light(style="font-size: 0.85em; line-height: 1.2;")
+                    strong.d-block.text-dark.mb-1 #{empresa.convenioAplicable.nombre}
+                    span.text-muted
+                      i.bi.bi-arrow-right-short
+                      | Aporte Sindical: 
+                      strong #{empresa.convenioAplicable.aporteSindical}% 
+                    br
+                    span.text-muted
+                      i.bi.bi-arrow-right-short
+                      | Presentismo: 
+                      strong #{empresa.convenioAplicable.adicionalPresentismo}%
+                else
+                  span.badge.bg-warning.text-dark Sin convenio
+
+              td.align-middle
                 if empresa.activo
                   span.badge.bg-success Activo
                 else
                   span.badge.bg-secondary Inactivo
 
-              td(style="white-space: nowrap;")
+              td.align-middle(style="white-space: nowrap;")
                 .d-flex.gap-2
-
                   a.btn.btn-primary.btn-sm(
                     href=`/empresas/${empresa._id}/editar`
                     title="Editar empresa"

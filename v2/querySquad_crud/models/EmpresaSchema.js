@@ -1,5 +1,24 @@
 const mongoose = require('mongoose');
 
+//Separado para poder eliminarlo ya que es opcional
+const convenioSchema = new mongoose.Schema({
+    nombre: {
+        type: String,
+        required: [true, 'El nombre del convenio es obligatorio'],
+        trim: true
+    },
+    aporteSindical: {
+        type: Number,
+        required: [true, 'El aporte sindical es obligatorio'],
+        min: [0, 'El porcentaje no puede ser negativo']
+    },
+    adicionalPresentismo: {
+        type: Number,
+        required: [true, 'El adicional por presentismo es obligatorio'],
+        min: [0, 'El porcentaje no puede ser negativo']
+    }
+}, { _id: false });
+
 const empresaSchema = new mongoose.Schema({
     id: { type: Number },
     nombre: {
@@ -39,6 +58,11 @@ const empresaSchema = new mongoose.Schema({
         type: String,
         required: [true, 'La persona de contacto es obligatoria'],
         trim: true
+    },
+    //Datos para liquidacion
+    convenioAplicable: {
+        type: convenioSchema,
+        default: null
     },
     fechaAlta: {
         type: Date,
