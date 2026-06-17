@@ -4,7 +4,8 @@ const auditoriaSchema = new mongoose.Schema({
     entidad: { 
         type: String, 
         required: true,
-        enum: ['Empresa', 'Empleado', 'Novedad'] //vr cuando agreguemos liquidaciones y socios
+        enum: ['Empresa', 'Empleado', 'Novedad', "Liquidacion",
+            "Socio"]
     },
     operacion: { 
         type: String, 
@@ -17,7 +18,7 @@ const auditoriaSchema = new mongoose.Schema({
     },
     usuario: { 
         type: String, 
-        default: 'usuario'}
+        default: 'usuario'},
 }, 
 { timestamps: true }); 
 

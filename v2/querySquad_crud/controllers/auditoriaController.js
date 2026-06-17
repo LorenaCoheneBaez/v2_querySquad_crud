@@ -1,10 +1,16 @@
 const AuditoriaModel = require("../models/AuditoriaSchema");
 
-const registrarAccion = async (entidad, operacion, detalle) => {
+const registrarAccion = async (entidad, operacion, detalle,
+    usuario = "usuario") => {
     try {
-        const nuevoLog = new AuditoriaModel({ entidad, operacion, detalle });
+        const nuevoLog = new AuditoriaModel({
+            entidad,
+            operacion,
+            detalle,
+            usuario });
         await nuevoLog.save();
         console.log(`[AUDITORÍA] Registro guardado con éxito: ${operacion} en ${entidad}`);
+        
     } catch (error) {
         console.error("Error crítico al registrar log de auditoría:", error.message);
     }
