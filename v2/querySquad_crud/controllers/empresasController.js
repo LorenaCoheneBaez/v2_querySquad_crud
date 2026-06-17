@@ -3,29 +3,6 @@ const NovedadModel = require("../models/NovedadSchema");
 const EmpleadoModel = require("../models/EmpleadoSchema");
 const { registrarAccion } = require("./auditoriaController");
 
-/*const crearEmpresa = async (req, res) => {
-    try {
-        const nuevaEmpresa = new EmpresaModel(req.body);
-        await nuevaEmpresa.save();
-        return res.redirect("/empresas?msg=created");
-    } catch (error) {
-        if (error.code === 11000) {
-            return res.status(400).json({ 
-                mensaje: "Error al crear: Ya existe una empresa con ese CUIT." 
-            });
-        }
-
-        if (error.name === 'ValidationError') {
-            return res.status(400).json({ 
-                mensaje: "Error de validación: " + error.message 
-            });
-        }
-
-        console.error("Error al guardar empresa:", error);
-        return res.status(500).json({ mensaje: "Error interno del servidor" });
-    }
-};
-*/
 const crearEmpresa = async (req, res, next) => {
     
     console.log("Datos que llegaron al body:", req.body);

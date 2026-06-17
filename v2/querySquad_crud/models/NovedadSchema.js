@@ -34,6 +34,22 @@ const novedadSchema = new mongoose.Schema({
     activo: {
         type: Boolean,
         default: true
+    },
+    //Se agregan para realizar la liquidacion
+    impactaLiquidacion: {
+        type: Boolean,
+        default: false
+    },
+
+    tipoImpacto: {
+        type: String,
+        enum: ["suma", "resta", "sin_impacto"],
+        default: "sin_impacto"
+    },
+
+    valorImpacto: {
+        type: Number,
+        default: 0
     }
 
 }, { timestamps: true, collection: 'novedades' });

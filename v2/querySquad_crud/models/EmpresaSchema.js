@@ -50,6 +50,5 @@ const empresaSchema = new mongoose.Schema({
     }
 }, { timestamps: true });
 
-//module.exports = mongoose.model('Empresa', empresaSchema);
 const Empresa = mongoose.models.Empresa || mongoose.model('Empresa', empresaSchema);
 module.exports = Empresa;
