@@ -41,22 +41,20 @@ const empresasRoutes = require("./routes/empresasRoutes");
 const empleadosRoutes = require("./routes/empleadosRoutes");
 const novedadesRoutes = require("./routes/novedadesRoutes");
 const auditoriaRoutes = require("./routes/auditoriaRoutes");
+const sociosRoutes = require("./routes/sociosRoutes");
+const liquidacionesRoutes = require("./routes/liquidacionesRoutes");
 
 app.use("/empresas", empresasRoutes);
 app.use("/empleados", empleadosRoutes);
 app.use("/novedades", novedadesRoutes);
 app.use("/auditoria", auditoriaRoutes);
+app.use("/socios", sociosRoutes);
+app.use("/liquidaciones", liquidacionesRoutes);
+
 
 app.get('/', (req, res) => {
   res.render('login');
 });
-/*
-app.listen(PORT, () => {
-  console.log("Servidor corriendo en el puerto " + PORT);
-});
-
-app.use(express.urlencoded({ extended: true }));
-*/
 
 app.post("/login", (req, res) => {
 
