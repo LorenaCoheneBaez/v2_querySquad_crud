@@ -3,6 +3,8 @@ const mongoose = require("mongoose");
 const path = require("path");
 const methodOverride = require("method-override");
 const manejarErrores = require("./middlewares/errorHandler");
+const session = require("express-session");
+const verificarLogin = require("./middlewares/autenticacion");
 
 const app = express();
 const PORT = 3000;
@@ -30,6 +32,14 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+app.use(
+  session({
+    secret: "querysquad",
+    resave: false,
+    saveUninitialized: false
+  })
+);
+
 //Para no tener error con PUT
 app.use(methodOverride(function (req, res) {
   if (req.body && typeof req.body === 'object' && '_method' in req.body) {
@@ -44,12 +54,12 @@ const auditoriaRoutes = require("./routes/auditoriaRoutes");
 const sociosRoutes = require("./routes/sociosRoutes");
 const liquidacionesRoutes = require("./routes/liquidacionesRoutes");
 
-app.use("/empresas", empresasRoutes);
-app.use("/empleados", empleadosRoutes);
-app.use("/novedades", novedadesRoutes);
-app.use("/auditoria", auditoriaRoutes);
-app.use("/socios", sociosRoutes);
-app.use("/liquidaciones", liquidacionesRoutes);
+app.use("/empresas", verificarLogin, empresasRoutes);
+app.use("/empleados", verificarLogin, empleadosRoutes);
+app.use("/novedades", verificarLogin, novedadesRoutes);
+app.use("/auditoria", verificarLogin, auditoriaRoutes);
+app.use("/socios", verificarLogin, sociosRoutes);
+app.use("/liquidaciones", verificarLogin, liquidacionesRoutes);
 
 
 app.get('/', (req, res) => {
@@ -62,19 +72,22 @@ app.post("/login", (req, res) => {
 
   if (usuario === "admin" && password === "1234") {
 
-    res.redirect("/empresas");
+  req.session.usuario = {
+    nombre: usuario,
+    rol: "admin"
+  };
 
-  } else {
+  res.redirect("/empresas");
 
-    res.redirect("/?error=1");
-
-  }
+}
 
 });
 
 app.get("/logout", (req, res) => {
 
-  res.redirect("/");
+  req.session.destroy(() => {
+    res.redirect("/");
+  });
 
 });
 
