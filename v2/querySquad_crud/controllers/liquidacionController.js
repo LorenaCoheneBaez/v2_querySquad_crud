@@ -4,6 +4,12 @@ const NovedadModel = require("../models/NovedadSchema");
 const EmpresaModel = require("../models/EmpresaSchema");
 const { registrarAccion } = require("./auditoriaController");
 
+//Cargas sociales
+const ALICUOTAS_LEY = Object.freeze({
+    JUBILACION: 0.11,
+    OBRA_SOCIAL: 0.03
+});
+
 // GET: Mostrar el formulario para una nueva liquidación
 const mostrarFormularioNuevaLiquidacion = async (req, res) => {
     try {
@@ -34,26 +40,36 @@ const crearLiquidacion = async (req, res) => {
         if (empleado.salario === undefined || empleado.salario === null) {
             return res.status(400).send("El empleado no tiene un salario base asignado.");
         }
-     //Con las novedades sumamos o restamos la liquidacion
+
+        // Buscamos las novedades a aplicar
         const novedades = await NovedadModel.find({
             empleadoId,
             activo: true,
             estado: "procesada",
-            impactaLiquidacion: true
+            impactaLiquidacion: true,
         });
 
-        
-        let montoBase = empleado.salario;
+        const montoBase = empleado.salario;
         let montoFinal = montoBase;
-        //Se aplica el convenio en caso de corresponder
+
+        //Cargas sociales
+        const jubilacion = montoBase * ALICUOTAS_LEY.JUBILACION;
+        const obraSocial = montoBase * ALICUOTAS_LEY.OBRA_SOCIAL;
+        montoFinal -= (jubilacion + obraSocial);
+
+        let descuentoSindical = 0;
+        let premioPresentismo = 0;
+
+        // Se aplica el convenio en caso de corresponder
         if (empleado.empresaId && empleado.empresaId.convenioAplicable) {
             const cct = empleado.empresaId.convenioAplicable;
 
             if (cct.nombre) {
-                const descuentoSindical = montoBase * (cct.aporteSindical / 100);
-                const premioPresentismo = montoBase * (cct.adicionalPresentismo / 100);
+                descuentoSindical = montoBase * (cct.aporteSindical / 100);
+                premioPresentismo = montoBase * (cct.adicionalPresentismo / 100);
 
-                montoFinal = montoFinal + premioPresentismo - descuentoSindical;
+                montoFinal += premioPresentismo;
+                montoFinal -= descuentoSindical;
             }
         }
 
@@ -71,7 +87,10 @@ const crearLiquidacion = async (req, res) => {
             periodo,
             salarioBase: montoBase,
             montoLiquidado: montoFinal,
-            novedadesAplicadas: novedades.map(n => n._id)
+            jubilacion,          
+            obraSocial,         
+            novedadesAplicadas: novedades.map(n => n._id),
+            observaciones: req.body.observaciones || "",
         });
 
         await liquidacion.save();
@@ -144,17 +163,25 @@ const listarLiquidaciones = async (req, res) => {
         const liquidaciones = liquidacionesRaw.map(liq => {
             let deduccionSindical = 0;
             let premioPresentismo = 0;
+            let jubilacion = 0;
+            let obraSocial = 0;
             const empresaData = liq.empresaId;
 
             if (empresaData && empresaData.convenioAplicable && empresaData.convenioAplicable.nombre) {
                 const cct = empresaData.convenioAplicable;
                 deduccionSindical = liq.salarioBase * (cct.aporteSindical / 100);
                 premioPresentismo = liq.salarioBase * (cct.adicionalPresentismo / 100);
+                jubilacion = liq.salarioBase * ALICUOTAS_LEY.JUBILACION;
+                obraSocial = liq.salarioBase * ALICUOTAS_LEY.OBRA_SOCIAL;
+                salarioNeto= liq.salarioBase + premioPresentismo - deduccionSindical - jubilacion - obraSocial;
             }
 
             return {
                 ...liq,
-                desglose: { deduccionSindical, premioPresentismo }
+                deduccionSindical,
+                premioPresentismo,
+                jubilacion,
+                obraSocial
             };
         });
 
@@ -193,14 +220,67 @@ const mostrarFormularioEditarLiquidacion = async (req, res) => {
 
 const actualizarLiquidacion = async (req, res) => {
     try {
-        const liquidacion = await LiquidacionModel.findById(req.params.id);
+        const { id } = req.params;
+        const montoFinalManual = Number(req.body.montoLiquidado);
+        const observacionesForm = req.body.observaciones || "";
 
+        // Busco la liquidación original
+        const liquidacion = await LiquidacionModel.findById(id);
         if (!liquidacion) {
             return res.status(404).send("Liquidación no encontrada");
         }
 
-        liquidacion.montoLiquidado = Number(req.body.montoLiquidado);
-        liquidacion.observaciones = req.body.observaciones;
+        const empleado = await EmpleadoModel.findById(liquidacion.empleadoId).populate("empresaId");
+        if (!empleado) {
+            return res.status(404).send("Empleado no encontrado");
+        }
+
+        const novedades = await NovedadModel.find({
+            empleadoId: liquidacion.empleadoId,
+            activo: true,
+            estado: "procesada",
+            impactaLiquidacion: true,
+        });
+        // El salario base original se mantiene, cambian los calculos finales segun lo ingresado manualmente
+        const montoBase = liquidacion.salarioBase; 
+
+        // Cargas sociales sobre el sueldo base
+        const jubilacion = montoBase * ALICUOTAS_LEY.JUBILACION;
+        const obraSocial = montoBase * ALICUOTAS_LEY.OBRA_SOCIAL;
+
+        let descuentoSindical = 0;
+        let premioPresentismo = 0;
+
+        if (empleado.empresaId && empleado.empresaId.convenioAplicable) {
+            const cct = empleado.empresaId.convenioAplicable;
+            if (cct.nombre) {
+                descuentoSindical = montoBase * (cct.aporteSindical / 100);
+                premioPresentismo = montoBase * (cct.adicionalPresentismo / 100);
+            }
+        }
+
+        let totalTeorico = montoBase - jubilacion - obraSocial + premioPresentismo - descuentoSindical;
+
+        novedades.forEach(novedad => {
+            if (novedad.tipoImpacto === "suma") {
+                totalTeorico += novedad.valorImpacto;
+            } else if (novedad.tipoImpacto === "resta") {
+                totalTeorico -= novedad.valorImpacto;
+            }
+        });
+
+        // Diferencia para llegar desde nuestro total teórico al neto manual
+        const montoAjuste = montoFinalManual - totalTeorico;
+
+        liquidacion.montoLiquidado = montoFinalManual;
+        liquidacion.jubilacion = jubilacion;
+        liquidacion.obraSocial = obraSocial;
+        liquidacion.novedadesAplicadas = novedades.map(n => n._id);
+
+        const textoAjuste = montoAjuste !== 0
+            ? ` [Ajuste manual de neto aplicado: ${montoAjuste > 0 ? '+' : ''}${montoAjuste.toFixed(2)}]`
+            : "";
+        liquidacion.observaciones = `${observacionesForm}${textoAjuste}`.trim();
 
         if (req.body.activo !== undefined) {
             liquidacion.activo = (req.body.activo === "true");
@@ -212,14 +292,14 @@ const actualizarLiquidacion = async (req, res) => {
         await registrarAccion(
             "Liquidacion",
             "Modificación",
-            `Se modificó la liquidación del período ${liquidacion.periodo}. Nuevo estado: ${estadoTexto}.`
+            `Se editó el monto final a $${montoFinalManual}. Sueldo base permanente: $${montoBase}. Ajuste calculado: $${montoAjuste.toFixed(2)}.`
         );
 
         res.redirect("/liquidaciones?msg=updated");
 
     } catch (error) {
-        console.error("Error al actualizar la liquidación:", error);
-        res.status(500).send("Error interno al guardar los cambios");
+        console.error("Error al actualizar la liquidación manteniendo sueldo base:", error);
+        res.status(500).send("Error interno al procesar la actualización de la liquidación");
     }
 };
 

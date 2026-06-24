@@ -180,6 +180,35 @@ html(lang="es")
                     span.fs-5 #{liquidacion.periodo}
 
               // Detalles
+
+              //Calculo de totales
+              - var subtotalSuma = liquidacion.salarioBase;
+              - var subtotalResta = (liquidacion.jubilacion || 0) + (liquidacion.obraSocial || 0);
+              - var valorPresentismo = 0;
+              - var valorSindical = 0;
+              
+              - if (liquidacion.empresaId && liquidacion.empresaId.convenioAplicable && liquidacion.empresaId.convenioAplicable.nombre) {
+              -   var cct = liquidacion.empresaId.convenioAplicable;
+              -   if (cct.adicionalPresentismo > 0) {
+              -     valorPresentismo = liquidacion.salarioBase * (cct.adicionalPresentismo / 100);
+              -     subtotalSuma += valorPresentismo;
+              -   }
+              -   if (cct.aporteSindical > 0) {
+              -     valorSindical = liquidacion.salarioBase * (cct.aporteSindical / 100);
+              -     subtotalResta += valorSindical;
+              -   }
+              - }
+              
+              - if (liquidacion.novedadesAplicadas && liquidacion.novedadesAplicadas.length > 0) {
+              -   liquidacion.novedadesAplicadas.forEach(function(n) {
+              -     if (n.tipoImpacto === 'suma') subtotalSuma += n.valorImpacto;
+              -     if (n.tipoImpacto === 'resta') subtotalResta += n.valorImpacto;
+              -   });
+              - }
+              
+              - var netoTeorico = subtotalSuma - subtotalResta;
+              - var diferenciaAjuste = liquidacion.montoLiquidado - netoTeorico;
+
               table.table.table-bordered.mt-4
                 thead.table-light
                   tr
@@ -192,18 +221,19 @@ html(lang="es")
                     td.text-end $ #{liquidacion.salarioBase.toFixed(2)}
                     td.text-end
                   
-                  if liquidacion.empresaId.convenioAplicable && liquidacion.empresaId.convenioAplicable.nombre
-                    if liquidacion.desglose && liquidacion.desglose.premioPresentismo > 0
+                  if liquidacion.empresaId && liquidacion.empresaId.convenioAplicable && liquidacion.empresaId.convenioAplicable.nombre
+                    if valorPresentismo > 0
                       tr
                         td Adicional Presentismo (#{liquidacion.empresaId.convenioAplicable.adicionalPresentismo}%)
-                        td.text-end $ #{liquidacion.desglose.premioPresentismo.toFixed(2)}
+                        td.text-end $ #{valorPresentismo.toFixed(2)}
                         td.text-end
-                    if liquidacion.desglose && liquidacion.desglose.deduccionSindical > 0
+                    if valorSindical > 0
                       tr
                         td Aporte Sindical - #{liquidacion.empresaId.convenioAplicable.nombre} (#{liquidacion.empresaId.convenioAplicable.aporteSindical}%)
                         td.text-end
-                        td.text-end $ #{liquidacion.desglose.deduccionSindical.toFixed(2)}
+                        td.text-end $ #{valorSindical.toFixed(2)}
 
+                  //Novedades
                   if liquidacion.novedadesAplicadas && liquidacion.novedadesAplicadas.length > 0
                     each novedad in liquidacion.novedadesAplicadas
                       tr
@@ -214,6 +244,37 @@ html(lang="es")
                         else if novedad.tipoImpacto === 'resta'
                           td.text-end
                           td.text-end $ #{novedad.valorImpacto.toFixed(2)}
+
+                  //Cargas Sociales
+                  if liquidacion.jubilacion > 0
+                    tr
+                      td Jubilación (11%)
+                      td.text-end
+                      td.text-end $ #{liquidacion.jubilacion.toFixed(2)}   
+
+                  if liquidacion.obraSocial > 0
+                    tr            
+                      td Obra Social (3%)
+                      td.text-end
+                      td.text-end $ #{liquidacion.obraSocial.toFixed(2)}
+
+                  //Ajuste por edición manual de lo liquidado
+                  if Math.abs(diferenciaAjuste) > 0.01
+                    tr.table-warning
+                      td Ajuste Manual de Liquidación
+                      if diferenciaAjuste > 0
+                        td.text-end $ #{diferenciaAjuste.toFixed(2)}
+                        td.text-end
+                      else
+                        td.text-end
+                        td.text-end $ #{Math.abs(diferenciaAjuste).toFixed(2)}
+
+                  if liquidacion.observaciones
+                    tr
+                      td(colspan="3").text-muted
+                        small 
+                          strong Observaciones: 
+                          | #{liquidacion.observaciones}
                 
                 tfoot
                   tr

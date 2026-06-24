@@ -33,6 +33,16 @@ const liquidacionSchema = new mongoose.Schema({
         ref: "Novedad"
     }],
 
+    // Cargas sociales
+    jubilacion: {
+        type: Number,
+        default: 0
+    },
+    obraSocial: {
+        type: Number,
+        default: 0
+    },
+
     observaciones: String,
 
     activo: {
