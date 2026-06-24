@@ -52,7 +52,10 @@ const listarTodasEmpresas = async (req, res) => {
         
         const empresasActivas = empresas.filter(e => e.activo).length;
 
-        const novedadesActivas = await NovedadModel.countDocuments({ activo: true });
+        const novedadesActivas = await NovedadModel.countDocuments({
+            activo: true,
+            estado: "pendiente"
+        });
         
         //Calculo de carga operativa (resumen general)
         const minutosPorNovedad = 10;
