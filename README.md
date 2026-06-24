@@ -19,6 +19,54 @@ Además, incorpora mecanismos de autenticación y control de acceso para garanti
 
 ---
 
+## Estructura de versiones del proyecto
+
+Este repositorio contiene dos versiones del proyecto:
+
+- La carpeta v1 corresponde a la versión inicial del sistema, con la base del CRUD para empresas, empleados y novedades, además de vistas básicas para la administración de datos.
+- La carpeta v2 corresponde a la versión mejorada y ampliada del sistema, donde se incorporan nuevas funcionalidades y una estructura más completa para la gestión de la consultora.
+
+### Cambios principales de la versión 2
+
+- Se incorporó la gestión de liquidaciones de haberes.
+- Se agregó la administración de socios.
+- Se ampliaron las rutas del sistema para cubrir nuevos módulos.
+- Se implementó autenticación por sesión para proteger las pantallas y rutas privadas.
+- Se reorganizaron las vistas y controladores para una experiencia más completa y ordenada.
+
+### Uso correcto de la versión 2
+
+1. Ingresar a la carpeta de la versión 2:
+   ```bash
+   cd v2/querySquad_crud
+   ```
+2. Instalar dependencias:
+   ```bash
+   npm install
+   ```
+3. Asegurarse de tener MongoDB en ejecución.
+4. Cargar los datos iniciales:
+   ```bash
+   node migracionMongo.js
+   ```
+5. Levantar el servidor:
+   ```bash
+   npm run dev
+   ```
+6. Abrir la aplicación en:
+   ```text
+   http://localhost:3000
+   ```
+7. Iniciar sesión con las credenciales de prueba:
+   ```text
+   Usuario: admin
+   Contraseña: 1234
+   ```
+
+> Importante: en la versión 2, todas las secciones del sistema están protegidas y requieren haber iniciado sesión para acceder.
+
+---
+
 ## Objetivos del Sistema
 
 - Centralizar la información de la consultora.
@@ -33,34 +81,41 @@ Además, incorpora mecanismos de autenticación y control de acceso para garanti
 ## Funcionalidades Principales
 
 ### Gestión de Empresas
+
 - Alta de empresas.
 - Modificación de datos.
 - Activación y desactivación de empresas.
 - Consulta de empresas activas e inactivas.
 
 ### Gestión de Empleados
+
 - Alta de empleados.
 - Edición de información.
 - Consulta de empleados registrados.
 
 ### Gestión de Novedades
+
 - Registro de novedades laborales.
 - Edición de novedades.
 - Eliminación de novedades.
 - Consulta general de novedades.
 
 ### Gestión de Liquidaciones
+
 - Administración de liquidaciones de haberes.
 - Seguimiento de procesos de liquidación.
 
 ### Gestión de Socios
+
 - Administración de socios.
 - Gestión de permisos y accesos.
 
 ### Auditoría
+
 - Registro y seguimiento de acciones realizadas dentro del sistema.
 
 ### Seguridad
+
 - Inicio y cierre de sesión.
 - Protección de rutas privadas.
 - Restricción de acceso a usuarios no autenticados.
@@ -70,14 +125,17 @@ Además, incorpora mecanismos de autenticación y control de acceso para garanti
 # Stack Tecnológico
 
 ## Backend
+
 - Node.js
 - Express.js
 
 ## Base de Datos
+
 - MongoDB
 - Mongoose ODM
 
 ## Frontend
+
 - Pug (Motor de plantillas)
 - Bootstrap
 
@@ -197,19 +255,24 @@ Contraseña: 1234
 
 # Rutas del Sistema
 
-| Página | Ruta |
-|----------|----------|
-| Login | http://localhost:3000 |
-| Empresas | http://localhost:3000/empresas |
-| Nueva Empresa | http://localhost:3000/empresas/nueva |
-| Empresas Activas | http://localhost:3000/empresas/listado-empresas-activas |
+| Página             | Ruta                                                      |
+| ------------------ | --------------------------------------------------------- |
+| Login              | http://localhost:3000                                     |
+| Cerrar sesión      | http://localhost:3000/logout                              |
+| Empresas           | http://localhost:3000/empresas                            |
+| Nueva Empresa      | http://localhost:3000/empresas/nueva                      |
+| Empresas Activas   | http://localhost:3000/empresas/listado-empresas-activas   |
 | Empresas Inactivas | http://localhost:3000/empresas/listado-empresas-inactivas |
-| Empleados | http://localhost:3000/empleados |
-| Nuevo Empleado | http://localhost:3000/empleados/nuevo |
-| Novedades | http://localhost:3000/novedades |
-| Auditoría | http://localhost:3000/auditoria |
-| Liquidaciones | http://localhost:3000/liquidaciones |
-| Socios | http://localhost:3000/socios |
+| Empleados          | http://localhost:3000/empleados                           |
+| Nuevo Empleado     | http://localhost:3000/empleados/nuevo                     |
+| Novedades          | http://localhost:3000/novedades                           |
+| Auditoría          | http://localhost:3000/auditoria                           |
+| Liquidaciones      | http://localhost:3000/liquidaciones                       |
+| Crear liquidación  | http://localhost:3000/liquidaciones/nueva                 |
+| Editar liquidación | http://localhost:3000/liquidaciones/actualizar/:id        |
+| Listado de Socios  | http://localhost:3000/socios                              |
+| Crear socio        | http://localhost:3000/socios/nuevo                        |
+| Editar socio       | http://localhost:3000/socios/actualizar/:id               |
 
 ---
 
