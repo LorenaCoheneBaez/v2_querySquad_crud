@@ -22,4 +22,4 @@ const auditoriaSchema = new mongoose.Schema({
 }, 
 { timestamps: true }); 
 
-module.exports = mongoose.model('Auditoria', auditoriaSchema);
+module.exports = mongoose.models.Auditoria || mongoose.model('Auditoria', auditoriaSchema);//module.exports = mongoose.model('Auditoria', auditoriaSchema);

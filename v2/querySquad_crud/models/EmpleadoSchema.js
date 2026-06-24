@@ -35,4 +35,4 @@ const empleadoSchema = new mongoose.Schema({
     }
 }, { timestamps: true });
 
-module.exports = mongoose.model('Empleado', empleadoSchema);
+module.exports = mongoose.models.Empleado || mongoose.model('Empleado', empleadoSchema); //module.exports = mongoose.model('Empleado', empleadoSchema);
