@@ -45,6 +45,10 @@ html(lang="es")
                 label.form-label Fecha
                 input.form-control(type="date", name="fecha", required, value=novedad.fecha)
 
+              .col-md-4
+                label.form-label Valor de impacto
+                input.form-control(type="number", name="valorImpacto", step="0.01", value=novedad.valorImpacto)
+
               .col-md-12
                 label.form-label Descripción
                 textarea.form-control(name="descripcion", rows="3", required) #{novedad.descripcion}
