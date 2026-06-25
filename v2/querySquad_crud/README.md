@@ -11,21 +11,23 @@
 
 ## ¿Qué diferencia a la versión 2?
 
-La carpeta v1 contiene la versión inicial del proyecto, con el CRUD base para empresas, empleados y novedades. La carpeta v2 amplía esa base con nuevas funcionalidades y una estructura más completa para la gestión de la consultora.
+La carpeta`v1`contiene la versión inicial del proyecto, con el CRUD base para empresas, empleados y novedades. La carpeta `v2` amplía esa base con nuevas funcionalidades y una estructura más completa para la gestión de la consultora.
 
 ### Cambios principales en la versión 2
 
-- Se incorporó la gestión de liquidaciones de haberes.
-- Se agregó la administración de socios.
-- Se ampliaron las rutas del sistema para cubrir nuevos módulos.
-- Se implementó autenticación por sesión y protección de rutas privadas.
-- Se mejoró la navegación entre módulos y formularios.
+- **Migración a la Nube:** Transición completa de archivos JSON a **MongoDB Atlas** utilizando Mongoose ODM para asegurar la persistencia e integridad de los datos.
+- **Nuevos Módulos Core:** Se incorporó la gestión de **Liquidaciones de Haberes** (con cálculos automáticos de convenios) y la administración de **Socios**.
+- **Seguridad de Acceso:** Implementación de autenticación por sesión (`express-session`) y protección mediante middlewares en todas las rutas privadas.
+- **Módulo de Auditoría:** Sistema de trazabilidad automática que registra acciones críticas (Altas, Bajas lógicas, Modificaciones) de los usuarios.
+- **Calidad de Código (Testing):** Cobertura del 100% en pruebas unitarias utilizando **Jest** para los validadores de entrada.
+- **Interfaz UI/UX:** Transición a un motor de plantillas dinámico (**Pug**) con diseño *responsive* en Bootstrap 5 e interacciones mediante modales.
 
 ## Stack Tecnológico
 
-- Backend: Node.js con Express.
-- Base de Datos: MongoDB con Mongoose ODM.
-- Vistas: Pug.
+- **Backend:** Node.js, Express.js
+- **Base de Datos:** MongoDB (Atlas), Mongoose ODM
+- **Vistas:** Pug, HTML5, Bootstrap 5, Bootstrap Icons
+- **Testing:** Jest
 
 ## Instalación
 
@@ -51,7 +53,7 @@ Cargar datos iniciales:
 node migracionMongo.js
 ```
 
-## Ejecución del proyecto
+## Ejecución del proyecto en modo desarrollo
 
 ```bash
 npm run dev
@@ -90,3 +92,22 @@ http://localhost:3000
 | Nueva Liquidación | http://localhost:3000/liquidaciones/nueva |
 | Socios            | http://localhost:3000/socios              |
 | Nuevo Socio       | http://localhost:3000/socios/nuevo        |
+
+
+## Ejecución de Pruebas Unitarias (Testing)
+
+El sistema cuenta con casos de test automatizados que garantizan que no ingresen datos corruptos o incompletos a la base de datos. 
+
+Para correr la evaluación, ejecutar:
+
+```bash
+npm run test
+```
+
+Antes de ejecutarlos debemos asegurarnos tenemos instalado el Framework Jest. 
+
+Si necesitamos instalarlo:
+
+```bash
+npm install --save-dev jest
+```
