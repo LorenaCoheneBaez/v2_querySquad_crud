@@ -72,10 +72,67 @@ const validarActualizacionNovedad = (req, res, next) => {
     next();
 };
 
+//---- validaciones socio -------
+const validarSocioFields = (req, res, next) => {
+    const { nombre, apellido, dni, email, participacion } = req.body;
+
+    if (!nombre || !apellido || !dni || !email || participacion === undefined) {
+        return res.status(400).json({
+            error: true,
+            mensaje: "Error de validación: Faltan datos obligatorios del socio."
+        });
+    }
+    next();
+};
+
+const validarActualizacionSocio = (req, res, next) => {
+    const { nombre, apellido, dni, email, participacion, permisos, activo } = req.body;
+
+    // Al menos un dato válido para actualizar
+    if (!nombre && !apellido && !dni && !email && participacion === undefined && permisos === undefined && activo === undefined) {
+        return res.status(400).json({
+            error: true,
+            mensaje: "Debe enviar al menos un campo válido para actualizar el socio."
+        });
+    }
+    next();
+};
+
+//---- validaciones liquidacion -------
+const validarLiquidacionFields = (req, res, next) => {
+    const { empleadoId, periodo } = req.body;
+
+    if (!empleadoId || !periodo) {
+        return res.status(400).json({
+            error: true,
+            mensaje: "Error de validación: El empleado y el período son obligatorios."
+        });
+    }
+    next();
+};
+
+const validarActualizacionLiquidacion = (req, res, next) => {
+    const { montoLiquidado, activo, observaciones } = req.body;
+
+    // Verifica que venga al menos un dato de los que permite el formulario de edición
+    if (montoLiquidado === undefined && activo === undefined && observaciones === undefined) {
+        return res.status(400).json({
+            error: true,
+            mensaje: "Debe enviar al menos un campo válido para actualizar la liquidación."
+        });
+    }
+    next();
+};
+//----------------------------------------------
+
 module.exports = {
     validarEmpresaFields,
     validarEmpleadoFields,
     validarActualizacionEmpleado,
     validarNovedadFields,
-    validarActualizacionNovedad
+    validarActualizacionNovedad,
+    validarSocioFields,
+    validarActualizacionSocio,
+    validarLiquidacionFields,
+    validarActualizacionLiquidacion
 };

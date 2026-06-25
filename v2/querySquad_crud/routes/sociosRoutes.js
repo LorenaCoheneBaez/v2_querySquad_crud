@@ -13,6 +13,11 @@ const {
     eliminarSocio
 } = require("../controllers/sociosController");
 
+const { 
+    validarSocioFields, 
+    validarActualizacionSocio
+} = require("../middlewares/validadores");
+
 // Listado
 router.get("/", listarSocios);
 
@@ -20,13 +25,13 @@ router.get("/", listarSocios);
 router.get("/nuevo", mostrarFormularioNuevoSocio);
 
 // Crear
-router.post("/", crearSocio);
+router.post("/", validarSocioFields, crearSocio);
 
 // Formulario editar
 router.get("/actualizar/:id", mostrarFormularioEditarSocio);
 
 // Actualizar
-router.put("/:id", actualizarSocio);
+router.put("/:id", validarActualizacionSocio, actualizarSocio);
 
 // Baja lógica
 router.delete("/:id", eliminarSocio);

@@ -4,7 +4,11 @@ const {
     validarEmpleadoFields,
     validarActualizacionEmpleado,
     validarNovedadFields,
-    validarActualizacionNovedad
+    validarActualizacionNovedad,
+    validarSocioFields,
+    validarActualizacionSocio,
+    validarLiquidacionFields,
+    validarActualizacionLiquidacion
 } = require('../middlewares/validadores');
 
 // ==========================================
@@ -185,5 +189,91 @@ describe('Testing: validarActualizacionNovedad', () => {
         const next = jest.fn();
         validarActualizacionNovedad(req, res, next);
         expect(res.status).toHaveBeenCalledWith(400);
+    });
+});
+
+// ==========================================
+// ALTA SOCIOS
+// ==========================================
+describe('Testing: validarSocioFields', () => {
+    test('Debe llamar a next() si tiene todos los datos obligatorios', () => {
+        const req = { body: { nombre: 'Carlos', apellido: 'Gómez', dni: '11223344', email: 'carlos@test.com', participacion: 25 } };
+        const res = {};
+        const next = jest.fn();
+        validarSocioFields(req, res, next);
+        expect(next).toHaveBeenCalledTimes(1);
+    });
+
+    test('Debe devolver 400 si falta el email', () => {
+        const req = { body: { nombre: 'Carlos', apellido: 'Gómez', dni: '11223344', participacion: 25 } };
+        const res = { status: jest.fn().mockReturnThis(), json: jest.fn() };
+        const next = jest.fn();
+        validarSocioFields(req, res, next);
+        expect(res.status).toHaveBeenCalledWith(400);
+        expect(next).not.toHaveBeenCalled();
+    });
+});
+
+// ==========================================
+// ACT SOCIOS
+// ==========================================
+describe('Testing: validarActualizacionSocio', () => {
+    test('Debe pasar si se envía al menos un campo (ej. participación)', () => {
+        const req = { body: { participacion: 30 } };
+        const res = {};
+        const next = jest.fn();
+        validarActualizacionSocio(req, res, next);
+        expect(next).toHaveBeenCalledTimes(1);
+    });
+
+    test('Debe devolver 400 si el body está vacío', () => {
+        const req = { body: {} };
+        const res = { status: jest.fn().mockReturnThis(), json: jest.fn() };
+        const next = jest.fn();
+        validarActualizacionSocio(req, res, next);
+        expect(res.status).toHaveBeenCalledWith(400);
+        expect(next).not.toHaveBeenCalled();
+    });
+});
+// ==========================================
+// LIQUIDACION ALTA
+// ========================================
+describe('Testing: validarLiquidacionFields', () => {
+    test('Debe llamar a next() si tiene empleadoId y periodo', () => {
+        const req = { body: { empleadoId: '60d5ec49f1b2c8b1', periodo: '2026-06' } };
+        const res = {};
+        const next = jest.fn();
+        validarLiquidacionFields(req, res, next);
+        expect(next).toHaveBeenCalledTimes(1);
+    });
+
+    test('Debe devolver 400 si falta el periodo', () => {
+        const req = { body: { empleadoId: '60d5ec49f1b2c8b1' } };
+        const res = { status: jest.fn().mockReturnThis(), json: jest.fn() };
+        const next = jest.fn();
+        validarLiquidacionFields(req, res, next);
+        expect(res.status).toHaveBeenCalledWith(400);
+    });
+});
+
+// ==========================================
+// ACT LIQUIDACIONES
+// =======================================
+describe('Testing: validarActualizacionLiquidacion', () => {
+    test('Debe pasar si se envía al menos un campo (ej. montoLiquidado)', () => {
+        const req = { body: { montoLiquidado: 500000 } };
+        const res = {};
+        const next = jest.fn();
+        validarActualizacionLiquidacion(req, res, next);
+        expect(next).toHaveBeenCalledTimes(1);
+    });
+
+    test('Debe devolver 400 si el body está vacío', () => {
+        const req = { body: {} };
+        const res = { status: jest.fn().mockReturnThis(), json: jest.fn() };
+        const next = jest.fn();
+        validarActualizacionLiquidacion(req, res, next);
+        expect(res.status).toHaveBeenCalledWith(400);
+        expect(next).not.toHaveBeenCalled();
     });
 });

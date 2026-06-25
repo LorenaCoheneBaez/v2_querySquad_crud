@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const EmpresaModel = require("../models/EmpresaSchema");
-const { validarActualizacionEmpleado } = require("../middlewares/validadores");
+const { validarActualizacionEmpleado, validarEmpleadoFields } = require("../middlewares/validadores");
 
 const {
     obtenerEmpleados,
@@ -38,6 +38,6 @@ router.delete("/:id", eliminarEmpleado);
 // GET: Obtener empleado por ID (API)
 router.get("/:id", obtenerEmpleadoPorId);
 // POST: Crear nuevo empleado
-router.post("/", crearEmpleado);
+router.post("/", validarEmpleadoFields, crearEmpleado);
 
 module.exports = router;
