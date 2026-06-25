@@ -216,6 +216,26 @@ node migracionMongo.js
 
 ---
 
+# Configuración con variables de entorno (.env)
+
+Para configurar los valores del proyecto sin hardcodearlos, puede crearse un archivo `.env` dentro de la carpeta de la versión que se quiera ejecutar, por ejemplo:
+
+```bash
+cd v2/querySquad_crud
+```
+
+Y luego crear el archivo `.env` con contenido como:
+
+```env
+PORT=3000
+MONGO_URI=mongodb://localhost:27017/query_squad_db
+SESSION_SECRET=querysquad
+```
+
+Estas variables serán leídas automáticamente por la aplicación al iniciarse.
+
+---
+
 # Ejecución del Proyecto
 
 ```bash

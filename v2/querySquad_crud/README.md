@@ -37,6 +37,18 @@ cd v2/querySquad_crud
 npm install
 ```
 
+## Configuración de entorno
+
+Puedes crear un archivo .env en la raíz del proyecto con las siguientes variables:
+
+```env
+PORT=3000
+MONGO_URI=mongodb://localhost:27017/query_squad_db
+SESSION_SECRET=querysquad
+```
+
+La aplicación las leerá automáticamente al iniciarse.
+
 ## Configuración de MongoDB
 
 Asegúrate de tener MongoDB en ejecución localmente.
