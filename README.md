@@ -155,6 +155,10 @@ Este repositorio contiene dos versiones del proyecto:
 
 - **Nodemon (^3.1.14):** Reinicia automáticamente el servidor al detectar cambios en el código.
 
+## Testing
+
+- **Jest (^30.0.5):** Framework de pruebas para JavaScript que permite realizar pruebas unitarias, de integración y automatizadas, facilitando la validación del correcto funcionamiento del sistema.
+
 ---
 
 # Requisitos Previos
