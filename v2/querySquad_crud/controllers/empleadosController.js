@@ -35,7 +35,6 @@ const crearEmpleado = async (req, res) => {
             salario: parseFloat(salario),
             activo: true
         });
-
         await nuevoEmpleado.save();
 
         //auditoria
