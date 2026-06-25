@@ -19,6 +19,12 @@ Además, incorpora mecanismos de autenticación y control de acceso para garanti
 
 ---
 
+# Deploy
+
+Link: [querysquad-crud](https://v2-querysquad-crud.onrender.com/)
+
+---
+
 ## Estructura de versiones del proyecto
 
 Este repositorio contiene dos versiones del proyecto:
