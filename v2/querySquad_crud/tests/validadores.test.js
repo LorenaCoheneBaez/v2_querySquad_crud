@@ -69,7 +69,7 @@ describe('Testing Empleados: validarEmpleadoFields', () => {
                 nombre: 'Ana',
                 apellido: 'Gálvez',
                 dni: '35123456',
-                empresaId: '60d5ec49f1b2c8b1f8e4b5a1' // ID simulado de Mongo
+                empresa: '60d5ec49f1b2c8b1f8e4b5a1' // ID simulado de Mongo
             }
         };
         const res = {};
@@ -85,7 +85,7 @@ describe('Testing Empleados: validarEmpleadoFields', () => {
             body: {
                 nombre: 'Ana',
                 apellido: 'Gálvez',
-                empresaId: '60d5ec49f1b2c8b1f8e4b5a1'
+                empresa: '60d5ec49f1b2c8b1f8e4b5a1'
             }
         };
         
