@@ -25,44 +25,115 @@ html(lang="es")
       .card.shadow-sm.border-0.mt-2
         .card-body.p-4
           form(action="/socios" method="POST")
-            
+
             h5.mb-3 Datos Personales
+
             .row.mb-3
               .col-md-6.mb-3
                 label.form-label(for="nombre") Nombre
-                input.form-control(type="text", name="nombre", id="nombre", placeholder="Ej: Juan", required)
-              
+                input.form-control(
+                  type="text",
+                  name="nombre",
+                  id="nombre",
+                  placeholder="Ej: Juan",
+                  required
+                )
+
               .col-md-6.mb-3
                 label.form-label(for="apellido") Apellido
-                input.form-control(type="text", name="apellido", id="apellido", placeholder="Ej: Pérez", required)
+                input.form-control(
+                  type="text",
+                  name="apellido",
+                  id="apellido",
+                  placeholder="Ej: Pérez",
+                  required
+                )
 
             .row.mb-3
               .col-md-4.mb-3
                 label.form-label(for="dni") DNI
-                input.form-control(type="text", name="dni", id="dni", placeholder="Sin puntos", required)
-              
+                input.form-control(
+                  type="text",
+                  name="dni",
+                  id="dni",
+                  placeholder="Sin puntos",
+                  required
+                )
+
               .col-md-4.mb-3
                 label.form-label(for="email") Email
-                input.form-control(type="email", name="email", id="email", placeholder="ejemplo@correo.com", required)
-              
+                input.form-control(
+                  type="email",
+                  name="email",
+                  id="email",
+                  placeholder="ejemplo@correo.com",
+                  required
+                )
+
               .col-md-4.mb-3
                 label.form-label(for="participacion") Participación (%)
-                input.form-control(type="number", name="participacion", id="participacion", step="0.01", min="0", max="100", placeholder="Ej: 25.5", required)
+                input.form-control(
+                  type="number",
+                  name="participacion",
+                  id="participacion",
+                  step="0.01",
+                  min="0",
+                  max="100",
+                  placeholder="Ej: 25.5",
+                  required
+                )
 
             hr.mb-4
+
+            h5.mb-3 Credenciales de Acceso
+
+            .row.mb-3
+              .col-md-6.mb-3
+                label.form-label(for="usuario") Usuario
+                input.form-control(
+                  type="text",
+                  name="usuario",
+                  id="usuario",
+                  placeholder="Usuario para iniciar sesión",
+                  required
+                )
+
+              .col-md-6.mb-3
+                label.form-label(for="password") Contraseña
+                input.form-control(
+                  type="password",
+                  name="password",
+                  id="password",
+                  placeholder="Contraseña",
+                  required
+                )
+
+            hr.mb-4
+
             h5.mb-3 Configuración del Sistema
 
             .row.mb-3
               .col-md-12.mb-3
                 label.form-label Módulos Habilitados
-                select.form-select(name="permisos", id="permisos", multiple, size="6")
+                select.form-select(
+                  name="permisos",
+                  id="permisos",
+                  multiple,
+                  size="6"
+                )
                   option(value="EMPRESAS") EMPRESAS
                   option(value="EMPLEADOS") EMPLEADOS
                   option(value="NOVEDADES") NOVEDADES
                   option(value="LIQUIDACIONES") LIQUIDACIONES
                   option(value="SOCIOS") SOCIOS
                   option(value="AUDITORIA") AUDITORIA
-                .form-text Mantenga presionada la tecla <strong>Ctrl</strong> (Windows) o <strong>Cmd</strong> (Mac) para seleccionar múltiples opciones.
+
+                .form-text
+                  | Mantenga presionada la tecla
+                  strong  Ctrl
+                  |  (Windows) o
+                  strong  Cmd
+                  |  (Mac) para seleccionar múltiples opciones.
 
             button.btn.btn-finance.w-100.py-2.mt-3(type="submit")
               i.bi.bi-person-plus-fill.me-2

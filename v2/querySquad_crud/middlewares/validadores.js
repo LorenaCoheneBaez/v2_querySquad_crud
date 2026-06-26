@@ -17,12 +17,12 @@ const validarEmpresaFields = (req, res, next) => {
 
 // Middleware para validar empleado
 const validarEmpleadoFields = (req, res, next) => {
-    const { nombre, apellido, dni, empresaId } = req.body;
+    const { nombre, apellido, dni, empresa } = req.body;
 
-    if (!nombre || !apellido || !dni || !empresaId) {
+    if (!nombre || !apellido || !dni || !empresa) {
         return res.status(400).json({
             error: true,
-            mensaje: "Error de validación: Por favor complete todos los campos requeridos (nombre, apellido, dni, empresaId)."
+            mensaje: "Error de validación: Por favor complete todos los campos requeridos (nombre, apellido, dni, empresa)."
         });
     }
 

@@ -53,7 +53,7 @@ html(lang="es")
 
           .col-md-6.mb-3
             label.form-label Empresa
-            select.form-select(name="empresa" required)
+            select.form-select(name="empresaId" required)
               option(value="") Selecciona una empresa
               each empresa in empresas
                 option(value=empresa._id) #{empresa.nombre}

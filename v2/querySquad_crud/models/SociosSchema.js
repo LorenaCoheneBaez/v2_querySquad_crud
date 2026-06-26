@@ -25,6 +25,17 @@ const socioSchema = new mongoose.Schema({
         required: true
     },
 
+    usuario: {
+    type: String,
+    required: true,
+    unique: true,
+    },
+
+    password: {
+    type: String,
+    required: true
+    },
+
     participacion: {
         type: Number,
         required: true,

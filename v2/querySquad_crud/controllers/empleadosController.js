@@ -7,12 +7,12 @@ const { registrarAccion } = require("./auditoriaController");
 const crearEmpleado = async (req, res) => {
     try {
         console.log("Datos recibidos del formulario:", req.body);
-        const { nombre, apellido, dni, empresa, salario } = req.body;
+        const { nombre, apellido, dni, empresaId, salario } = req.body;
         const empresaExiste = await EmpresaModel.findById(empresa);
 
         if (!empresaExiste) {
             return res.status(404).render("error-nuevo-empleado", {
-                mensaje: "La empresa con ID " + empresaIdRecibido + " no existe en nuestra base de datos."
+                mensaje: "La empresa con ID " + empresaId + " no existe en nuestra base de datos."
             });
         }
 
@@ -31,7 +31,7 @@ const crearEmpleado = async (req, res) => {
             nombre,
             apellido,
             dni,
-            empresaId: empresa,
+            empresaId: empresaId,
             salario: parseFloat(salario),
             activo: true
         });

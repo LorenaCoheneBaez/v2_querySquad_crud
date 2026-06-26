@@ -32,6 +32,8 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+const passport = require("./auth/passportConfig");
+
 app.use(
   session({
     secret: "querysquad",
@@ -39,6 +41,15 @@ app.use(
     saveUninitialized: false
   })
 );
+
+app.use(passport.initialize());
+app.use(passport.session());  
+
+const authRoutes = require("./auth/authRoutes");
+
+// app.use("/auth", authRoutes);
+
+app.use("/", authRoutes);
 
 //Para no tener error con PUT
 app.use(methodOverride(function (req, res) {
@@ -66,30 +77,30 @@ app.get('/', (req, res) => {
   res.render('login');
 });
 
-app.post("/login", (req, res) => {
+// app.post("/login", (req, res) => {
 
-  const { usuario, password } = req.body;
+//   const { usuario, password } = req.body;
 
-  if (usuario === "admin" && password === "1234") {
+//   if (usuario === "admin" && password === "1234") {
 
-  req.session.usuario = {
-    nombre: usuario,
-    rol: "admin"
-  };
+//   req.session.usuario = {
+//     nombre: usuario,
+//     rol: "admin"
+//   };
 
-  res.redirect("/empresas");
+//   res.redirect("/empresas");
 
-}
+// }
 
-});
+// });
 
-app.get("/logout", (req, res) => {
+// app.get("/logout", (req, res) => {
 
-  req.session.destroy(() => {
-    res.redirect("/");
-  });
+//   req.session.destroy(() => {
+//     res.redirect("/");
+//   });
 
-});
+// });
 
 // Middleware de manejo de errores (debe ir al final)
 app.use(manejarErrores);
