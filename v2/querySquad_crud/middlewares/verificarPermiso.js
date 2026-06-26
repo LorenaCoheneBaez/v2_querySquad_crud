@@ -1,23 +1,36 @@
+const { getTokenFromRequest, verifyToken } = require("../auth/jwt");
+
 const verificarPermiso = (permisoRequerido) => {
     return (req, res, next) => {
+        const usuarioActual = req.user || req.session?.usuario;
 
-        if (!req.isAuthenticated() || !req.user) {
-            return res.redirect("/");
+        if (!usuarioActual) {
+            const token = getTokenFromRequest(req);
+
+            if (!token) {
+                return res.redirect("/");
+            }
+
+            try {
+                const decoded = verifyToken(token);
+                req.user = decoded;
+                req.session.usuario = decoded;
+            } catch (error) {
+                return res.status(401).json({ error: true, mensaje: "Token inválido o expirado" });
+            }
         }
 
-        const usuarioActual = req.user;
-
-        if (usuarioActual.rol === "admin") {
+        if (req.user?.rol === "admin") {
             return next();
         }
 
-        if (!usuarioActual.permisos || !Array.isArray(usuarioActual.permisos)) {
+        if (!req.user?.permisos || !Array.isArray(req.user.permisos)) {
             return res.status(403).send("No tiene permisos asignados.");
         }
 
         const permisoBuscado = permisoRequerido.toLowerCase();
 
-        const tienePermiso = usuarioActual.permisos.some(
+        const tienePermiso = req.user.permisos.some(
             (p) => p.toLowerCase() === permisoBuscado
         );
 
@@ -30,10 +43,24 @@ const verificarPermiso = (permisoRequerido) => {
 };
 
 const verificarLogin = (req, res, next) => {
-    if (req.isAuthenticated()) {
+    if (req.isAuthenticated() || req.user || req.session?.usuario) {
         return next();
     }
-    return res.redirect("/");
+
+    const token = getTokenFromRequest(req);
+
+    if (!token) {
+        return res.redirect("/");
+    }
+
+    try {
+        const decoded = verifyToken(token);
+        req.user = decoded;
+        req.session.usuario = decoded;
+        return next();
+    } catch (error) {
+        return res.status(401).json({ error: true, mensaje: "Token inválido o expirado" });
+    }
 };
 
 module.exports = {

@@ -6,7 +6,7 @@ const { registrarAccion } = require("./auditoriaController");
 
 const crearEmpleado = async (req, res) => {
     try {
-        console.log("Datos recibidos del formulario:", req.body);
+       
         const { nombre, apellido, dni, empresa, salario } = req.body;
         const empresaExiste = await EmpresaModel.findById(empresa);
 

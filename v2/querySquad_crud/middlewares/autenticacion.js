@@ -1,10 +1,23 @@
-function verificarLogin(req, res, next) {
+const { getTokenFromRequest, verifyToken } = require("../auth/jwt");
 
-  if (req.session.usuario) {
+function verificarLogin(req, res, next) {
+  if (req.session?.usuario || req.user) {
     return next();
   }
 
-  return res.redirect("/");
+  const token = getTokenFromRequest(req);
+  if (!token) {
+    return res.redirect("/");
+  }
+
+  try {
+    const decoded = verifyToken(token);
+    req.user = decoded;
+    req.session.usuario = decoded;
+    return next();
+  } catch (error) {
+    return res.status(401).json({ error: true, mensaje: "Token inválido o expirado" });
+  }
 }
 
 module.exports = verificarLogin;
