@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const EmpresaModel = require("../models/EmpresaSchema");
 const { validarActualizacionEmpleado, validarEmpleadoFields } = require("../middlewares/validadores");
+const { verificarPermiso, verificarLogin } = require("../middlewares/verificarPermiso");
 
 const {
     obtenerEmpleados,
@@ -14,9 +15,9 @@ const {
 } = require("../controllers/empleadosController");
 
 // GET: Listar empleados
-router.get("/", listarEmpleados);
+router.get("/", verificarLogin, verificarPermiso("EMPLEADOS"), listarEmpleados);
 // GET: Form nuevo empleado
-router.get("/nuevo", async (req, res) => {
+router.get("/nuevo", verificarLogin, verificarPermiso("EMPLEADOS"), async (req, res) => {
     try {
         const empresas = await EmpresaModel.find({ activo: true }).lean();
         res.render("nuevo-empleado", { empresas });
@@ -26,18 +27,18 @@ router.get("/nuevo", async (req, res) => {
     }
 });
 // GET: Listar empleados (API)
-router.get("/api", obtenerEmpleados);
+router.get("/api", verificarLogin, verificarPermiso("EMPLEADOS"), obtenerEmpleados);
 // GET: Obtener empleado por ID (API)
-router.get("/api/:id", obtenerEmpleadoPorId);
+router.get("/api/:id", verificarLogin, verificarPermiso("EMPLEADOS"), obtenerEmpleadoPorId);
 // GET: Form actualizar empleado
-router.get("/actualizar/:id", mostrarFormularioActualizar);
+router.get("/actualizar/:id", verificarLogin, verificarPermiso("EMPLEADOS"), mostrarFormularioActualizar);
 // PUT: Actualizar empleado
-router.put("/:id", validarActualizacionEmpleado, actualizarEmpleado);
+router.put("/:id", verificarLogin, verificarPermiso("EMPLEADOS"), validarActualizacionEmpleado, actualizarEmpleado);
 // DELETE: Eliminar empleado
-router.delete("/:id", eliminarEmpleado);
+router.delete("/:id", verificarLogin, verificarPermiso("EMPLEADOS"), eliminarEmpleado);
 // GET: Obtener empleado por ID (API)
-router.get("/:id", obtenerEmpleadoPorId);
+router.get("/:id", verificarLogin, verificarPermiso("EMPLEADOS"), obtenerEmpleadoPorId);
 // POST: Crear nuevo empleado
-router.post("/", validarEmpleadoFields, crearEmpleado);
+router.post("/", verificarLogin, verificarPermiso("EMPLEADOS"), validarEmpleadoFields, crearEmpleado);
 
 module.exports = router;

@@ -1,67 +1,58 @@
 const mongoose = require("mongoose");
+const { Schema } = mongoose;
 
-const socioSchema = new mongoose.Schema({
+const socioSchema = new Schema(
+    {
+        nombre: {
+            type: String,
+            required: true,
+            trim: true,
+        },
+        apellido: {
+            type: String,
+            required: true,
+            trim: true,
+        },
+        dni: {
+            type: String,
+            required: true,
+            unique: true,
+            trim: true,
+        },
+        password: {
+            type: String,
+            required: true,
+        },
+        rol: {
+            type: String,
+            enum: ["admin", "socio", "usuario"],
+            default: "socio",
+        },
+        permisos: {
+            type: [String],
+            default: [],
+        },
+        activo: {
+            type: Boolean,
+            default: true,
+        },
+        "participación": {
+            type: Number,
+            default: 0,
+        },
+        "email": {
+            type: String,
+            required: true, 
+            unique: true,
+            trim: true,
+        },
+        timestamp: {
+            type: Date,
+            default: Date.now,          
+    }  
+} 
+);
 
-    nombre: {
-        type: String,
-        required: true,
-        trim: true
-    },
+const SocioModel = mongoose.model("Socio", socioSchema);
 
-    apellido: {
-        type: String,
-        required: true,
-        trim: true
-    },
-
-    dni: {
-        type: String,
-        required: true,
-        unique: true
-    },
-
-    email: {
-        type: String,
-        required: true
-    },
-
-    usuario: {
-    type: String,
-    required: true,
-    unique: true,
-    },
-
-    password: {
-    type: String,
-    required: true
-    },
-
-    participacion: {
-        type: Number,
-        required: true,
-        min: 0,
-        max: 100
-    },
-
-    permisos: [{
-        type: String,
-        enum: [
-            "EMPRESAS",
-            "EMPLEADOS",
-            "NOVEDADES",
-            "LIQUIDACIONES",
-            "SOCIOS",
-            "AUDITORIA"
-        ]
-    }],
-
-    activo: {
-        type: Boolean,
-        default: true
-    }
-
-}, { timestamps: true });
-
-module.exports =
-    mongoose.models.Socio ||
-    mongoose.model("Socio", socioSchema);
+module.exports = SocioModel;

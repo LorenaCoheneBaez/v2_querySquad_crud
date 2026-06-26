@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const methodOverride = require("method-override");
+const { verificarPermiso, verificarLogin } = require("../middlewares/verificarPermiso");
 
 router.use(methodOverride("_method"));
 
@@ -19,21 +20,21 @@ const {
 } = require("../middlewares/validadores");
 
 // Listado
-router.get("/", listarSocios);
+router.get("/", verificarLogin, verificarPermiso("SOCIOS"), listarSocios);
 
 // Formulario nuevo socio
-router.get("/nuevo", mostrarFormularioNuevoSocio);
+router.get("/nuevo", verificarLogin, verificarPermiso("SOCIOS"), mostrarFormularioNuevoSocio);
 
 // Crear
-router.post("/", validarSocioFields, crearSocio);
+router.post("/", verificarLogin, verificarPermiso("SOCIOS"), validarSocioFields, crearSocio);
 
 // Formulario editar
-router.get("/actualizar/:id", mostrarFormularioEditarSocio);
+router.get("/actualizar/:id", verificarLogin, verificarPermiso("SOCIOS"), mostrarFormularioEditarSocio);
 
 // Actualizar
-router.put("/:id", validarActualizacionSocio, actualizarSocio);
+router.put("/:id", verificarLogin, verificarPermiso("SOCIOS"), validarActualizacionSocio, actualizarSocio);
 
 // Baja lógica
-router.delete("/:id", eliminarSocio);
+router.delete("/:id", verificarLogin, verificarPermiso("SOCIOS"), eliminarSocio);
 
 module.exports = router;

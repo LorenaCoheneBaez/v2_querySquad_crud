@@ -37,7 +37,7 @@ passport.use(
                 }
 
                 const socio = await Socio.findOne({
-                    usuario,
+                    email: usuario,
                     activo: true
                 });
 
@@ -57,7 +57,7 @@ passport.use(
 
                 return done(null, {
                     id: socio._id,
-                    usuario: socio.usuario,
+                    usuario: socio.email,
                     rol: "socio",
                     permisos: socio.permisos
                 });

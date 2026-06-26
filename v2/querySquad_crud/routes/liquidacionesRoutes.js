@@ -12,6 +12,7 @@ const {
     actualizarLiquidacion,
     eliminarLiquidacion
 } = require("../controllers/liquidacionController");
+const { verificarPermiso, verificarLogin } = require("../middlewares/verificarPermiso");
 
 const { 
     validarLiquidacionFields,
@@ -19,21 +20,21 @@ const {
 } = require("../middlewares/validadores");
 
 // Listado
-router.get("/", listarLiquidaciones);
+router.get("/", verificarLogin, verificarPermiso("LIQUIDACIONES"), listarLiquidaciones);
 
 // Formulario nueva liquidación
-router.get("/nueva", mostrarFormularioNuevaLiquidacion)
+router.get("/nueva", verificarLogin, verificarPermiso("LIQUIDACIONES"), mostrarFormularioNuevaLiquidacion);
 
 // Crear
-router.post("/", validarLiquidacionFields, crearLiquidacion);
+router.post("/", verificarLogin, verificarPermiso("LIQUIDACIONES"), validarLiquidacionFields, crearLiquidacion);
 
 // Formulario editar
-router.get("/actualizar/:id", mostrarFormularioEditarLiquidacion);
+router.get("/actualizar/:id", verificarLogin, verificarPermiso("LIQUIDACIONES"), mostrarFormularioEditarLiquidacion);
 
 // Actualizar
-router.put("/:id", validarActualizacionLiquidacion, actualizarLiquidacion);
+router.put("/:id", verificarLogin, verificarPermiso("LIQUIDACIONES"), validarActualizacionLiquidacion, actualizarLiquidacion);
 
 // Baja lógica
-router.delete("/:id", eliminarLiquidacion);
+router.delete("/:id", verificarLogin, verificarPermiso("LIQUIDACIONES"), eliminarLiquidacion);
 
 module.exports = router;

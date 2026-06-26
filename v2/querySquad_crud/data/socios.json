@@ -13,7 +13,9 @@
       "AUDITORIA", 
       "NOVEDADES"
     ],
-    "activo": true
+    "activo": true,
+    "password": 1234,
+    "rol": "socio"
   },
   {
     "nombre": "Luis",
@@ -21,8 +23,10 @@
     "dni": "25333444",
     "email": "luis.montan@talentoevolutivo.com",
     "participacion": 35,
-    "permisos": ["EMPLEADOS", "NOVEDADES", "LIQUIDACIONES"],
-    "activo": true
+    "permisos": ["EMPRESAS", "NOVEDADES", "LIQUIDACIONES"],
+    "activo": true,
+    "password": 12345,
+    "rol": "socio"
   },
   {
     "nombre": "Rio",
@@ -31,6 +35,8 @@
     "email": "mario.rio@talentoevolutivo.com",
     "participacion": 25,
     "permisos": ["EMPRESAS", "AUDITORIA"],
-    "activo": true
+    "activo": true,
+    "password": 123456,
+    "rol": "socio"
   }
 ]

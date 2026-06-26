@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const fs = require("fs").promises;
 const path = require("path");
+const bcrypt = require("bcryptjs");
 
 const EmpresaModel = require("./models/EmpresaSchema");
 const EmpleadoModel = require("./models/EmpleadoSchema");
@@ -25,6 +26,7 @@ const migrarDatos = async () => {
 
         const empresasInsertadas = await EmpresaModel.insertMany(empresasJson);
         const diccionarioEmpresas = {};
+
         // Se asume que empresasJson sí respeta el mismo orden que lo insertado
         empresasInsertadas.forEach((emp, index) => {
             const originalId = empresasJson[index].id;
@@ -75,8 +77,23 @@ const migrarDatos = async () => {
 
         await SocioModel.deleteMany({});
         console.log("Colección de socios limpiada");
-        await SocioModel.insertMany(sociosJson);
-        console.log("Migración de socios completada");
+
+        const sociosConHash = await Promise.all(
+            sociosJson.map(async (socio) => {
+                // Forzamos a que el password sea String porque bcrypt falla con números puros
+                const passwordTexto = String(socio.password);
+                const hashedPassword = await bcrypt.hash(passwordTexto, 10);
+
+                return {
+                    ...socio,
+                    password: hashedPassword
+                };
+            })
+        );
+
+        await SocioModel.insertMany(sociosConHash);
+
+        console.log("Migración de socios completada (con contraseñas encriptadas)");
 
         // Liquidaciones
         const rutaLiquidaciones = path.join(__dirname, "./data/liquidaciones.json");

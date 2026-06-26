@@ -1,5 +1,6 @@
 const express = require("express");
 const router = express.Router();
+const { verificarPermiso, verificarLogin } = require("../middlewares/verificarPermiso");
 
 const {
     listarNovedades,
@@ -12,18 +13,18 @@ const {
 const { validarNovedadFields, validarActualizacionNovedad } = require("../middlewares/validadores");
 
 // GET: listado (vista)
-router.get("/", listarNovedades);
+router.get("/", verificarLogin, verificarPermiso("NOVEDADES"), listarNovedades);
 
 // POST: crear
-router.post("/", validarNovedadFields, crearNovedad);
+router.post("/", verificarLogin, verificarPermiso("NOVEDADES"), validarNovedadFields, crearNovedad);
 
 // GET: mostrar formulario de edición
-router.get("/editar/:id", mostrarFormularioEditarNovedad);
+router.get("/editar/:id", verificarLogin, verificarPermiso("NOVEDADES"), mostrarFormularioEditarNovedad);
 
 // PUT: actualizar
-router.put("/:id", validarActualizacionNovedad, actualizarNovedad);
+router.put("/:id", verificarLogin, verificarPermiso("NOVEDADES"), validarActualizacionNovedad, actualizarNovedad);
 
 // DELETE: eliminar (baja lógica)
-router.delete("/:id", eliminarNovedad);
+router.delete("/:id", verificarLogin, verificarPermiso("NOVEDADES"), eliminarNovedad);
 
 module.exports = router;
