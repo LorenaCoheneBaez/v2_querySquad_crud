@@ -5,14 +5,15 @@ const methodOverride = require("method-override");
 const manejarErrores = require("./middlewares/errorHandler");
 const session = require("express-session");
 const verificarLogin = require("./middlewares/autenticacion");
+const config = require("./config/config");
 
 const app = express();
-const PORT = 3000;
+const PORT = config.port;
 
 // Conexión a MongoDB
 const conectarMongoDB = async () => {
   try {
-    await mongoose.connect("mongodb://localhost:27017/query_squad_db", {
+    await mongoose.connect(config.mongoUri, {
       useNewUrlParser: true,
       useUnifiedTopology: true
     });
@@ -36,7 +37,7 @@ const passport = require("./auth/passportConfig");
 
 app.use(
   session({
-    secret: "querysquad",
+    secret: config.sessionSecret,
     resave: false,
     saveUninitialized: false
   })

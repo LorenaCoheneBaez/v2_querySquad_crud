@@ -31,10 +31,10 @@ const validarEmpleadoFields = (req, res, next) => {
 
 // Middleware para validar actualización de empleado
 const validarActualizacionEmpleado = (req, res, next) => {
-    const { nombre, apellido, dni, empresaId } = req.body;
+    const { nombre, apellido, dni, empresa } = req.body;
 
     // Validar que al menos un campo esté presente
-    if (!nombre && !apellido && !dni && !empresaId) {
+    if (!nombre && !apellido && !dni && !empresa) {
         return res.status(400).json({
             error: true,
             mensaje: "Debe enviar al menos un campo para actualizar"

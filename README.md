@@ -19,6 +19,12 @@ Además, incorpora mecanismos de autenticación y control de acceso para garanti
 
 ---
 
+# Deploy
+
+Link: [querysquad-crud](https://v2-querysquad-crud.onrender.com/)
+
+---
+
 ## Estructura de versiones del proyecto
 
 Este repositorio contiene dos versiones del proyecto:
@@ -155,6 +161,10 @@ Este repositorio contiene dos versiones del proyecto:
 
 - **Nodemon (^3.1.14):** Reinicia automáticamente el servidor al detectar cambios en el código.
 
+## Testing
+
+- **Jest (^30.0.5):** Framework de pruebas para JavaScript que permite realizar pruebas unitarias, de integración y automatizadas, facilitando la validación del correcto funcionamiento del sistema.
+
 ---
 
 # Requisitos Previos
@@ -209,6 +219,26 @@ Para cargar los datos iniciales:
 ```bash
 node migracionMongo.js
 ```
+
+---
+
+# Configuración con variables de entorno (.env)
+
+Para configurar los valores del proyecto sin hardcodearlos, puede crearse un archivo `.env` dentro de la carpeta de la versión que se quiera ejecutar, por ejemplo:
+
+```bash
+cd v2/querySquad_crud
+```
+
+Y luego crear el archivo `.env` con contenido como:
+
+```env
+PORT=3000
+MONGO_URI=mongodb://localhost:27017/query_squad_db
+SESSION_SECRET=querysquad
+```
+
+Estas variables serán leídas automáticamente por la aplicación al iniciarse.
 
 ---
 
