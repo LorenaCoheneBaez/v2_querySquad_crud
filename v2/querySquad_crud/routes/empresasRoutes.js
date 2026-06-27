@@ -26,8 +26,8 @@ router.post("/", verificarLogin, verificarPermiso("EMPRESAS"), validarEmpresaFie
 router.get("/listado-empresas-activas", verificarLogin, verificarPermiso("EMPRESAS"), listarEmpresasActivas);
 //GET: Listado de empresas inactivas
 router.get("/listado-empresas-inactivas", verificarLogin, verificarPermiso("EMPRESAS"), listarEmpresasInactivas);
-//GET: Listado de todas las empresas
-router.get("/", verificarLogin, verificarPermiso("EMPRESAS"), listarTodasEmpresas);
+//GET: Listado de todas las empresas (Funciona como el home por lo que todos los usuarios logueados pueden acceder a este listado)
+router.get("/", verificarLogin, listarTodasEmpresas);
 // PUT: Cambiar estado de empresa (activar/desactivar)
 router.put("/:id/estado", verificarLogin, verificarPermiso("EMPRESAS"), cambiarEstadoEmpresa);
 // PUT: Actualizar empresa
