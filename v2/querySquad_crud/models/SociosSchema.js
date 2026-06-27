@@ -36,11 +36,11 @@ const socioSchema = new Schema(
             type: Boolean,
             default: true,
         },
-        "participación": {
+        participacion: {
             type: Number,
             default: 0,
         },
-        "email": {
+        email: {
             type: String,
             required: true, 
             unique: true,
