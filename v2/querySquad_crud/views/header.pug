@@ -58,5 +58,11 @@ nav.navbar.navbar-expand-lg.navbar-dark.bg-finance
       )
         | Socios
 
+      a.nav-link(
+        class=(activePage === 'reportes' ? 'active' : ''),
+        href="/reportes/errores"
+      )
+        | Reportes de Errores
+
       a.logout-btn(href="/logout")
         | Cerrar sesión

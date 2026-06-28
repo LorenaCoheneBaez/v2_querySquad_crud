@@ -21,6 +21,7 @@ const reportesController = {
                 totalErrores,
                 erroresPorTipo,
                 erroresRecientes,
+                activePage: 'reportes',
                 // Si la sesión tiene un usuario, pasarlo a la vista (por el navbar de tus compañeras)
                 usuario: req.session && req.session.usuario ? req.session.usuario : null
             });
