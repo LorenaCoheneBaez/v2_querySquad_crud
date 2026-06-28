@@ -40,6 +40,12 @@ module.exports = function errorTrackerMiddleware(req, res, next) {
                     metodo: req.method
                 }).catch(err => console.log('Fallo al guardar log de error (json)', err.message));
                 req._errorLogged = true;
+
+                // MAGIA AQUI: Si la petición viene de un navegador (ej. form submit) mostramos la vista linda
+                if (!req.xhr && req.accepts('html')) {
+                    // Evitamos loop infinito restaurando la función original temporalmente si render falla
+                    return originalRender.call(this, 'error-generico', { mensaje: mensajeError });
+                }
             }
         }
         originalJson.call(this, body);

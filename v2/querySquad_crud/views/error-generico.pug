@@ -1,0 +1,28 @@
+doctype html
+html(lang="es")
+  head
+    meta(charset="UTF-8")
+    meta(name="viewport" content="width=device-width, initial-scale=1.0")
+    title Error - Query Squad
+    link(href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet")
+    link(rel="stylesheet" href="/css/styles.css")
+    style.
+      .bg-finance { background-color: #1e3a5f; }
+  body
+    include header
+
+    .container.mt-5
+      .row.justify-content-center
+        .col-md-6
+          .card.shadow-sm.border-danger
+            .card-header.bg-danger.text-white
+              h4.mb-0 ⚠️ Ha ocurrido un problema
+            .card-body.text-center.p-5
+              h5.card-title El sistema reportó el siguiente error:
+              p.card-text.lead.mt-3.mb-4 #{mensaje}
+              
+              button.btn.btn-outline-secondary(onclick="window.history.back()") 
+                i.bi.bi-arrow-left 
+                | Volver atrás
+
+    script(src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js")
