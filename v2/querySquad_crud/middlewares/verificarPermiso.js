@@ -20,17 +20,17 @@ const verificarPermiso = (permisoRequerido) => {
             }
         }
 
-        if (req.user?.rol === "admin") {
+        if (usuarioActual.rol === "admin") {
             return next();
         }
 
-        if (!req.user?.permisos || !Array.isArray(req.user.permisos)) {
+        if (!usuarioActual.permisos || !Array.isArray(usuarioActual.permisos)) {
             return res.status(403).send("No tiene permisos asignados.");
         }
 
         const permisoBuscado = permisoRequerido.toLowerCase();
 
-        const tienePermiso = req.user.permisos.some(
+        const tienePermiso = usuarioActual.permisos.some(
             (p) => p.toLowerCase() === permisoBuscado
         );
 
