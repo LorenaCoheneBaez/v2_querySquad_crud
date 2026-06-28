@@ -16,6 +16,7 @@ module.exports = function errorTrackerMiddleware(req, res, next) {
                 ruta: req.originalUrl,
                 metodo: req.method
             }).catch(err => console.log('Fallo al guardar log de error (render)', err.message));
+            req._errorLogged = true;
         }
         // Llamar a la función original de Express
         originalRender.call(this, view, options, fn);
