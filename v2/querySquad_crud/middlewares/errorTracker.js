@@ -29,7 +29,7 @@ module.exports = function errorTrackerMiddleware(req, res, next) {
             if (!req._errorLogged) {
                 let tipoError = res.statusCode >= 500 ? 'Interno' : 'Validación';
                 let mensajeError = body.mensaje || body.error || 'Error desconocido';
-                
+
                 if (typeof mensajeError !== 'string') {
                     mensajeError = JSON.stringify(mensajeError);
                 }
@@ -58,13 +58,13 @@ module.exports = function errorTrackerMiddleware(req, res, next) {
         if (res.statusCode >= 400 && !req._errorLogged) {
             let tipoError = res.statusCode >= 500 ? 'Interno' : 'Validación';
             let mensajeError = typeof body === 'string' ? body : 'Error desconocido';
-            
+
             // Ignoramos si el body es un JSON stringificado que no pudimos atrapar antes, o lo intentamos parsear
             if (typeof body === 'string' && body.includes('error')) {
                 try {
                     const parsed = JSON.parse(body);
                     mensajeError = parsed.mensaje || parsed.error || body;
-                } catch(e) {}
+                } catch (e) { }
             }
 
             ErrorLog.create({
@@ -74,6 +74,11 @@ module.exports = function errorTrackerMiddleware(req, res, next) {
                 metodo: req.method
             }).catch(err => console.log('Fallo al guardar log de error (send)', err.message));
             req._errorLogged = true;
+
+            // Si la petición viene de un navegador (ej. form submit) mostramos la vista error-generico
+            if (!req.xhr && req.accepts('html')) {
+                return originalRender.call(this, 'error-generico', { mensaje: mensajeError });
+            }
         }
         originalSend.call(this, body);
     };
