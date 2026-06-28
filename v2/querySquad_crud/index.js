@@ -33,6 +33,10 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+// RASTREADOR DE ERRORES: Se inyecta aquí para que atrape todo
+const errorTracker = require("./middlewares/errorTracker");
+app.use(errorTracker);
+
 const passport = require("./auth/passportConfig");
 
 app.use(
@@ -65,6 +69,7 @@ const novedadesRoutes = require("./routes/novedadesRoutes");
 const auditoriaRoutes = require("./routes/auditoriaRoutes");
 const sociosRoutes = require("./routes/sociosRoutes");
 const liquidacionesRoutes = require("./routes/liquidacionesRoutes");
+const reportesRoutes = require("./routes/reportesRoutes");
 
 app.use("/empresas", verificarLogin, empresasRoutes);
 app.use("/empleados", verificarLogin, empleadosRoutes);
@@ -72,6 +77,7 @@ app.use("/novedades", verificarLogin, novedadesRoutes);
 app.use("/auditoria", verificarLogin, auditoriaRoutes);
 app.use("/socios", verificarLogin, sociosRoutes);
 app.use("/liquidaciones", verificarLogin, liquidacionesRoutes);
+app.use("/reportes", verificarLogin, reportesRoutes);
 
 
 app.get('/', (req, res) => {

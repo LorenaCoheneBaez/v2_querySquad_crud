@@ -1,0 +1,59 @@
+doctype html
+html(lang="es")
+  head
+    meta(charset="UTF-8")
+    meta(name="viewport" content="width=device-width, initial-scale=1.0")
+    title Dashboard de Errores - Query Squad
+    link(href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet")
+    link(rel="stylesheet" href="/css/styles.css")
+  body
+    include header
+
+    .container.mt-4
+      h2.mb-4 Panel de Control de Errores
+      p.lead Resumen de problemas frecuentes en el circuito administrativo para la toma de decisiones institucionales.
+
+      .row.mb-4
+        .col-md-4
+          .card.text-white.bg-danger.mb-3
+            .card-body
+              h5.card-title Total de Errores Registrados
+              h2.display-4 #{totalErrores}
+
+        .col-md-8
+          .card
+            .card-header Errores por Tipo
+            .card-body
+              if erroresPorTipo && erroresPorTipo.length > 0
+                ul.list-group
+                  each tipo in erroresPorTipo
+                    li.list-group-item.d-flex.justify-content-between.align-items-center
+                      | #{tipo._id}
+                      span.badge.bg-primary.rounded-pill #{tipo.total}
+              else
+                p.text-muted No hay datos suficientes para mostrar estadísticas por tipo.
+
+      .card
+        .card-header Últimos 10 Conflictos Registrados
+        .card-body
+          if erroresRecientes && erroresRecientes.length > 0
+            table.table.table-striped
+              thead
+                tr
+                  th Fecha
+                  th Tipo
+                  th Mensaje
+                  th Ruta Afectada
+              tbody
+                each error in erroresRecientes
+                  tr
+                    td #{new Date(error.createdAt).toLocaleString('es-AR')}
+                    td 
+                      span.badge(class=error.tipo === 'Validación' ? 'bg-warning text-dark' : (error.tipo === 'Conflicto de Negocio' ? 'bg-info text-dark' : 'bg-danger')) #{error.tipo}
+                    td #{error.mensaje}
+                    td 
+                      code #{error.ruta}
+          else
+            p.text-muted No se han registrado errores recientemente.
+
+    script(src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js")
